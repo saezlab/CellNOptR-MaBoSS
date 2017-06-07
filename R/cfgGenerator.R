@@ -1,4 +1,6 @@
 cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NULL, initState=TRUE){
+  ### Write the cfg file
+  ### Initial conditions depends on the treatment
   
   if (is.null(timeMaxi) == TRUE){
     timeMaxi <- max(CNOlist@timepoints)
@@ -6,6 +8,7 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
   
   print(paste("create the file : ",nameSim,"_",treatmt,".cfg", sep=""))
   
+  ### Create the new file copying a basic file present in the directory.
   dest_file <- paste(nameSim,"_",treatmt,".cfg", sep="")
   file.copy("basicFile.cfg", dest_file, overwrite = TRUE)
   
@@ -30,7 +33,7 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
   }
   
   #### Particular case of the inhibited nodes
-  ## if the treatment indicates an inhibition, the rates are ste to 0
+  ## if the treatment indicates an inhibition, the rates are set to 0
   ## else set to 1
   for(anInh in inhib) {
     if (CNOlist@inhibitors[treatmt, anInh] == 1){
@@ -56,16 +59,15 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
     write(istate, file = dest_file, append = TRUE)
   }
   
-  #### all the nodes that have not inhibitors or stimuli are initialized to 0
-  if (initState){
+  #### initial condition for all the other nodes, depends on the parameter initState
+  if (initState){ ### all the nodes that have not inhibitors or stimuli are initialized to 0
     nodes <- setdiff(all_spec, stim)
     for (aNode in nodes){
       istate <- paste(aNode, ".istate = 0;", sep="")
       write(istate, file = dest_file, append = TRUE)
     }
-  } #### only the inhibited nodes will be initialized to 0
-  else {
-    #### the inhibited nodes are set to 0
+  }
+  else { ### only the inhibited nodes will be initialized to 0
     for (anInh in inhib){
       if (CNOlist@inhibitors[treatmt, anInh] == 1){
         istate <- paste(anInh, ".istate = 0;", sep="")
