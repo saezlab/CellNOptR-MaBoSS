@@ -1,4 +1,7 @@
 bndGenerator <- function(CNOlist, model, nameSim=NULL){
+  ### Does the transcription from a given topology in model to logical rules
+  ### Creates a new file
+  
   fileName <- paste(nameSim,".bnd", sep = "")
   write("", file = fileName)
   nameSpecies <- c(model$namesSpecies)
@@ -64,9 +67,10 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
           }
           
           reg <- str_split(reac,"=", simplify = TRUE)[1]
-          if (str_detect(reg, "[+]") == FALSE){
+          if (str_detect(reg, "[+]") == FALSE){ ### simple edge A --> B
             write(paste("(",reg,")", sep=""), file = fileName, append = TRUE)
-          } else {
+          
+            } else { ### hyperedge A + C --> B
             reg <- str_split(reg,"[+]", simplify = TRUE)
             firstElt = TRUE
             write("(", file = fileName, append = TRUE)
@@ -80,7 +84,9 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
               write(aReg, file = fileName, append = TRUE)
             }
             write(")", file = fileName, append = TRUE)
-          }
+            }
+          
+          ### I doubt on this test
         } else if ((bRule == FALSE) && (reac == tail(nameReac,1))){
           if (spec %in% colnames(CNOlist@stimuli)) {
             write(paste("(",spec,")", sep = ""), file = fileName, append = TRUE)
@@ -99,16 +105,16 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
   write("", file=fileName)
   for (wd in myFile){
     if (str_detect(wd, "^$") != TRUE){
-      if (str_detect(wd, "^Node") == TRUE){
+      if (str_detect(wd, "^Node") == TRUE){ ### Beginning of the rule
         write(wd, file = fileName, append = TRUE)
-      } else if (str_detect(wd, "^  logic") == TRUE){
+      } else if (str_detect(wd, "^  logic") == TRUE){ ### Write the boolean rule
         lgcl <- wd
-      } else if (str_detect(wd, "^  rate_up") == TRUE){
+      } else if (str_detect(wd, "^  rate_up") == TRUE){ ### Write the rules regarding rates
         write(lgcl, file = fileName, append = TRUE)
         write(wd, file = fileName, append = TRUE)
-      } else if (str_detect(wd, "^  rate_down") == TRUE){
+      } else if (str_detect(wd, "^  rate_down") == TRUE){ ### kind of useless because written in the previous step
         write(wd, file = fileName, append = TRUE)
-      } else if (str_detect(wd, "[}]") == TRUE){
+      } else if (str_detect(wd, "[}]") == TRUE){ ### End of the rule
         write(paste(wd,"\n", sep = ""), file = fileName, append = TRUE)
       } else {
         lgcl <- paste(lgcl, wd, sep="")
