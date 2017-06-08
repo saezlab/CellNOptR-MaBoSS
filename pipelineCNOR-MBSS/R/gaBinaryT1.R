@@ -135,8 +135,6 @@ gaBinaryT1<-function(
   }
   
   while(!stop){
-    print("c'est la nouvelle population !!! ")
-    print(g+1)
     
     nameGen <- g+1
     #popDoubled <- Pop[duplicated(Pop),]
