@@ -81,6 +81,10 @@ getFit<-function(
     # nInputs: number of inputs of cut model
     sizePen<-(nDataPts*sizeFac*nInputs)/nInTot
     score<-deviationPen+NAPen+sizePen
+    
+    print(paste("MSE : ", deviationPen, sep=""))
+    print(paste("NA penalty : ", NAPen, sep=""))
+    print(paste("Size penalty : ", sizePen, sep=""))
     return(score)
 
     }
