@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
-#BSUB -P jrc_combine
 
 rm(list=c(ls()))
+
+startRun <- proc.time()
 
 setwd(dir = "/Users/celine/MaBoSS-env-2.0")
 
@@ -121,7 +122,8 @@ par(mfrow=c(1,1))
 # The edges are on (black or red) or off (grey or pink) according to the
 # best set of parameters found during the optimisation (the best bit string)
 
-
+timeExec <- proc.time()-startRun
+print(timeExec)
 ############################
 ##  Writing your results  ##
 ############################
