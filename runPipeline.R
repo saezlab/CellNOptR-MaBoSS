@@ -40,10 +40,8 @@ system("mkdir allCond")
 # there is also a list of treatments that does not appear by the simple
 # command "> CNOlistToy"
 #CNOlistToy = CNOlist("ToyDataMMB.csv")
-cno_data=readMIDAS(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
-         package="CNORode"));
-CNOlistToy=makeCNOlist(cno_data,subfield=FALSE);
-
+CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
+                               package="CNORode"))
 #CNOlistToy
 # Another way to visualize the data and export the plot on a .pdf format
 #plot(CNOlistToy)
