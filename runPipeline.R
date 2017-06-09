@@ -6,12 +6,13 @@ startRun <- proc.time()
 
 setwd(dir = "/Users/celine/MaBoSS-env-2.0")
 
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("doParallel")
+source("https://bioconductor.org/biocLite.R")
+biocLite("CNORode")
 
 library(CellNOptR)
 library(stringr)
 library(parallel)
+library(CNORode)
 #library(doParallel)
 
 #registerDoParallel(cores=(detectCores(all.tests = FALSE, logical = TRUE)-1))
@@ -38,7 +39,11 @@ system("mkdir allCond")
 # experimental data : provides studied species and timepoints
 # there is also a list of treatments that does not appear by the simple
 # command "> CNOlistToy"
-CNOlistToy = CNOlist("ToyDataMMB.csv")
+#CNOlistToy = CNOlist("ToyDataMMB.csv")
+cno_data=readMIDAS(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
+         package="CNORode"));
+CNOlistToy=makeCNOlist(cno_data,subfield=FALSE);
+
 #CNOlistToy
 # Another way to visualize the data and export the plot on a .pdf format
 #plot(CNOlistToy)
@@ -46,8 +51,9 @@ CNOlistToy = CNOlist("ToyDataMMB.csv")
 
 
 # PKN model obtained from CytoScape
-pknmodel<-readSIF("ToyPKNMMB.sif")
-
+#pknmodel<-readSIF("ToyPKNMMB.sif")
+model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
+         package="CNORode"));
 
 # Having loaded the data set and corresponding model, we run a check
 # to make sure that our data and model were correctly loaded and that our
@@ -69,7 +75,7 @@ pknmodel<-readSIF("ToyPKNMMB.sif")
 # and expansion
 # preprocessing function is available and makes the following 3 steps in 1
 # command line
-model <- preprocessing(CNOlistToy, pknmodel, expansion=TRUE, compression=TRUE, cutNONC=TRUE, verbose=FALSE)
+#model <- preprocessing(CNOlistToy, pknmodel, expansion=TRUE, compression=TRUE, cutNONC=TRUE, verbose=FALSE)
 #checkSignals(CNOlistToy,model) # also checked in gaBinaryT1() function
 #plotModel(model, CNOlistToy)
 
