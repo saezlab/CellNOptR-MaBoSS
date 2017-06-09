@@ -11,7 +11,7 @@ biocLite("CNORode")
 
 library(CellNOptR)
 library(stringr)
-library(parallel)
+#library(parallel)
 library(CNORode)
 #library(doParallel)
 
@@ -19,7 +19,7 @@ library(CNORode)
 #getDoParWorkers()
 
 #system("mkdir probPlots")
-system("mkdir allCond")
+#system("mkdir allCond")
 
 ###### Working with arguments
 #args <- commandArgs(trailingOnly = TRUE)
