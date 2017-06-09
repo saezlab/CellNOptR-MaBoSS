@@ -178,11 +178,11 @@ testOnSteadyState <- function(treatmt, nameSimIndiv, CNOlist, model, timeMaxi) {
   }
   #densityNodesMbss(dataMB, nameFolder, timeMaxi, species, qtty)
   
-  print(addTime)
+  #print(addTime)
   
   if (addTime == TRUE) {
-    print("Need more time to reach the steady state :")
-    print("Test realised on the slope and RSE of the linear regression")
+    #print("Need more time to reach the steady state :")
+    #print("Test realised on the slope and RSE of the linear regression")
     timeMaxi <- timeMaxi+max(CNOlist@timepoints)
   }
   return(timeMaxi)

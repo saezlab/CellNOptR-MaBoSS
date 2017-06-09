@@ -6,7 +6,7 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
     timeMaxi <- max(CNOlist@timepoints)
   }
   
-  print(paste("create the file : ",nameSim,"_",treatmt,".cfg", sep=""))
+  #print(paste("create the file : ",nameSim,"_",treatmt,".cfg", sep=""))
   
   ### Create the new file copying a basic file present in the directory.
   dest_file <- paste(nameSim,"_",treatmt,".cfg", sep="")

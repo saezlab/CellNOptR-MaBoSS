@@ -91,7 +91,7 @@ initBstring<-rep(1,length(model$reacID))
 
 ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=50,
                      verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
-ToyT1opt
+#ToyT1opt
 # get an eye of the function Help (section Value) to better underestand the
 # returned values
 
@@ -118,8 +118,8 @@ dev.off()
 par(mfrow=c(1,2))
 pdf("bestTopology_PKN.pdf")
 plotModel(model, CNOlistToy, bString=ToyT1opt$bString)
-bs = mapBack(model, pknmodel, ToyT1opt$bString)
-plotModel(pknmodel, CNOlistToy, bs, compressed=model$speciesCompressed)
+#bs = mapBack(model, pknmodel, ToyT1opt$bString)
+#plotModel(pknmodel, CNOlistToy, bs, compressed=model$speciesCompressed)
 dev.off()
 par(mfrow=c(1,1))
 # Processed model (left) and original PKN (right)

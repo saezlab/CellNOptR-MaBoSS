@@ -103,9 +103,9 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   #############################  #############################  #############################  #############################
   
   
-  print(nameSimIndiv)
+  #print(nameSimIndiv)
   if (scoreT0){
-    print("for time 0")
+    #print("for time 0")
     mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0)
     print(mbssResultsT0)
   } else { ### the score will be computed without the 1st time point
@@ -113,9 +113,9 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   }
   #print("for time 5")
   #mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0.5)
-  print("for time 10")
+  #print("for time 10")
   mbssResults <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=1)
-  print(mbssResults)
+  #print(mbssResults)
   
   removal <- paste("rm -r ",nameSimIndiv,"*", sep = "")
   system(removal)
@@ -124,7 +124,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
       system(paste("rm -r ", afile, sep=""))
     }
   }
-  print("individuals")
+  #print("individuals")
   #setwd(dir = "/Users/celine/CNOR_analysis")
   
   
@@ -183,7 +183,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   
   #print(simResults)
   
-  print("Ready to compute the Score")
+  #print("Ready to compute the Score")
   #Compute the score
   Score <- getFit(
     simResults=mbssResults,
