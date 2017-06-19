@@ -81,18 +81,18 @@ testOnSteadyState <- function(treatmt, nameSimIndiv, CNOlist, model, timeMaxi) {
     
     
     ### plot the data
-    myPath <- getwd()
-    timeSeq <- dataMB[,which(colnames(dataMB) == "Time")]
-    pdf(paste(myPath,"/allCond/",nameFolder, "_", timeMaxi,".pdf", sep=""))
-    par(mfrow=c(1,1))
-    vecCol <- rainbow(length(species)-1)
-    plot(timeSeq, unlist(qtty[[1]]), type="l", col=1, ylim = c(0,1), main = paste(nameFolder,"_", timeMaxi, sep=""))
-    for (i in 2:length(species)){
-      spec <- species[i]
-      lines(timeSeq, unlist(qtty[[spec]]), col=vecCol[i-1])
-    }
-    legend("right", legend = names(qtty), col = c(1,vecCol), lwd = 1, title = )
-    dev.off()
+    #myPath <- getwd()
+    #timeSeq <- dataMB[,which(colnames(dataMB) == "Time")]
+    #pdf(paste(myPath,"/allCond/",nameFolder, "_", timeMaxi,".pdf", sep=""))
+    #par(mfrow=c(1,1))
+    #vecCol <- rainbow(length(species)-1)
+    #plot(timeSeq, unlist(qtty[[1]]), type="l", col=1, ylim = c(0,1), main = paste(nameFolder,"_", timeMaxi, sep=""))
+    #for (i in 2:length(species)){
+    #  spec <- species[i]
+    #  lines(timeSeq, unlist(qtty[[spec]]), col=vecCol[i-1])
+    #}
+    #legend("right", legend = names(qtty), col = c(1,vecCol), lwd = 1, title = )
+    #dev.off()
     
     ### plot the end
     #pdf(paste(myPath,"/allCond/end_",nameFolder, "_", timeMaxi,".pdf", sep=""))

@@ -16,7 +16,7 @@ library(parallel)
 #getDoParWorkers()
 
 #system("mkdir probPlots")
-system("mkdir allCond")
+#system("mkdir allCond")
 
 ###### Working with arguments
 #args <- commandArgs(trailingOnly = TRUE)
