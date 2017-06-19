@@ -28,9 +28,9 @@ the absolute path of the files.
 * For each generation, a file `resultsGen_1` (e.g. for the first generation) is created. It is the consequence of the line 89 in the `runPipeline.R`, where the parameter `verbose` is TRUE.
 * Plots
 
-`* Rplots.pdf and SimResultsT1_1.pdf represent the fitting scores between the best solution found and the experimental data`
+`* Rplots.pdf and SimResultsT1_1.pdf represent the fitting scores between the best solution found and the experimental data`  
 
-`* bestTopology_PKN.pdf gives first the topology obtained for the best solution`
+`* bestTopology_PKN.pdf gives first the topology obtained for the best solution`  
 
-`* evolFitToyT1.pdf represents the average score through generation and the best score along the time`
+`* evolFitToyT1.pdf represents the average score through generation and the best score along the time`  
 
