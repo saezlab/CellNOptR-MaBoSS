@@ -1,5 +1,5 @@
 # CellNOptR-MaBoSS
-CellNOptR with MaBoSS simulation
+CellNOptR with MaBoSS simulations. Rather than using a synchronous apdate, originally implemented in CellNOptR, it calls MaBoSS to do the simulations with asynchronous updates. By this way, the simulated data can have values from 0 to 1 instead of 0 or 1.
 
 ## Tools installation
 
