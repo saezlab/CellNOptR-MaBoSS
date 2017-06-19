@@ -10,7 +10,7 @@ directory.
 ## Make the pipeline running no the model
 
 * Compress and install the CellNOptR-MaBoSS package :  
-`tar zcvf CellNOptR-MaBoSS.tar.gz CellNOptR-MaBoSS/
+`tar zcvf CellNOptR-MaBoSS.tar.gz CellNOptR-MaBoSS/  
 R CMD INSTALL --no-html CellNOptR-MaBoSS.tar.gz`
 * Go the MaBoSS directory, and copy the `ToyDataMMB.csv`, `ToyPKNMMB.sif` et `basicFile.cfg` from the CellNOptR-MaBoSS directory.
 * Run the pipeline typing :  
