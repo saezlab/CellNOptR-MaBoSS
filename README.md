@@ -6,13 +6,13 @@ CellNOptR with MaBoSS simulation
 * To download MaBoSS, go to this [webpage](https://maboss.curie.fr) and follow the instructions given for the installation.
 * Download the CellNOptR-MaBoSS folder on your local machine. The package is contained in the `pipelineCNOR-MBSS` directory.
 
-## Make the pipeline running no the model
+## Make the pipeline running on the model
 
-* Compress and install the CellNOptR-MaBoSS package :  
+* Compress and install the package as a library :  
 `tar zcvf pipelineCNOR-MBSS.tar.gz pipelineCNOR-MBSS/`  
-`R CMD INSTALL --no-html CellNOptR-MaBoSS.tar.gz`
+`R CMD INSTALL --no-html pipelineCNOR-MBSS.tar.gz`
 * Go the MaBoSS directory, and copy the `ToyDataMMB.csv`, `ToyPKNMMB.sif` et `basicFile.cfg` from the CellNOptR-MaBoSS directory.
-* Run the pipeline typing :  
+* Run the pipeline with the command line :  
 `nohup Rscript ~/CellNOptR-MaBoSS/runPipeline.R &`
 
 ## Change the model
