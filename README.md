@@ -18,7 +18,7 @@ CellNOptR with MaBoSS simulation
 ## Change the model
 
 * A `.csv` and a `.sif` files are required. The first file contains the experiemental data and the second one gives the regulatory edges
-of the model. For more informations :
+of the model. For more informations : *Terfve, Camille, et al. "CellNOptR: a flexible toolkit to train protein signaling networks to data using multiple logic formalisms." BMC systems biology 6.1 (2012): 133.*
 * Replace files' names in the `runPipeline.R` lines 41 and 49 respectively. If the files are not in the CellNOptR-MaBoSS directory, enter
 the absolute path of the files.
 
