@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
 rm(list=c(ls()))
 
-startRun <- proc.time()
-
 setwd(dir = "/Users/celine/MaBoSS-env-2.0")
 
 source("https://bioconductor.org/biocLite.R")
@@ -88,8 +86,12 @@ initBstring<-rep(1,length(model$reacID))
 # This function is the genetic algorithm to be used to optimise a model by
 # fitting to data containing one time point
 
-ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=50, maxGens=100,
+
+startRun <- proc.time()
+ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=100,
                      verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
+timeExec <- proc.time()-startRun
+print(timeExec)
 #ToyT1opt
 # get an eye of the function Help (section Value) to better underestand the
 # returned values
@@ -125,8 +127,7 @@ dev.off()
 # The edges are on (black or red) or off (grey or pink) according to the
 # best set of parameters found during the optimisation (the best bit string)
 
-timeExec <- proc.time()-startRun
-print(timeExec)
+
 ############################
 ##  Writing your results  ##
 ############################

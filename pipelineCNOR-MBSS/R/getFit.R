@@ -82,7 +82,7 @@ getFit<-function(
     sizePen<-(nDataPts*sizeFac*nInputs)/nInTot
     score<-deviationPen+NAPen+sizePen
     
-    print(paste("MSE : ", deviationPen/sum(!is.na(CNOlist@signals[[timeIndex]])), sep=""))
+    print(paste("MSE : ", deviationPen/sum(!is.na(CNOlist@signals[[tPt]])), sep=""))
     print(paste("NA penalty : ", NAPen, sep=""))
     print(paste("Size penalty : ", sizePen, sep=""))
     return(score)
