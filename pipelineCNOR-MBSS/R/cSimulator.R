@@ -29,57 +29,58 @@ cSimulator <- function(CNOlist, model, simList, indexList, mode=1) {
 		stop("This function needs 'reacID' and 'namesSpecies' in model")
 	}
 	
+	res <- mbssResults(CNOlist, model, mode=mode)
 	# variables
-	nStimuli <- as.integer(length(indexList$stimulated))
-	nInhibitors <- as.integer(length(indexList$inhibited))
-	nCond <- as.integer(dim(CNOlist@stimuli)[1])
-	nReacs <- as.integer(length(model$reacID))
-	nSpecies <- as.integer(length(model$namesSpecies))
-	nMaxInputs <- as.integer(dim(simList$finalCube)[2])
+	#nStimuli <- as.integer(length(indexList$stimulated))
+	#nInhibitors <- as.integer(length(indexList$inhibited))
+	#nCond <- as.integer(dim(CNOlist@stimuli)[1])
+	#nReacs <- as.integer(length(model$reacID))
+	#nSpecies <- as.integer(length(model$namesSpecies))
+	#nMaxInputs <- as.integer(dim(simList$finalCube)[2])
 	
 	# simList
 	# used to be 
     # >>> finalCube = as.integer(as.vector(t(simList$finalCube))-1)
     # but as.vector(t is slow and can be replaced by just as.integer albeit
     # appropriate C modifications
-	finalCube = as.integer(simList$finalCube-1)
-	ixNeg = as.integer(simList$ixNeg)
-	ignoreCube = as.integer(simList$ignoreCube)
-	maxIx = as.integer(simList$maxIx-1)
+	#finalCube = as.integer(simList$finalCube-1)
+	#ixNeg = as.integer(simList$ixNeg)
+	#ignoreCube = as.integer(simList$ignoreCube)
+	#maxIx = as.integer(simList$maxIx-1)
 	
 	# index
-	indexSignals <- as.integer(indexList$signals-1)
-	indexStimuli <- as.integer(indexList$stimulated-1)
-	indexInhibitors <- as.integer(indexList$inhibited-1)
-    nSignals <- length(indexSignals)
+	#indexSignals <- as.integer(indexList$signals-1)
+	#indexStimuli <- as.integer(indexList$stimulated-1)
+	#indexInhibitors <- as.integer(indexList$inhibited-1)
+    #nSignals <- length(indexSignals)
 
 	# cnolist
-	valueInhibitors <- as.integer(CNOlist@inhibitors)
-	valueStimuli <- as.integer(CNOlist@stimuli)
+	#valueInhibitors <- as.integer(CNOlist@inhibitors)
+	#valueStimuli <- as.integer(CNOlist@stimuli)
 
-	res = .Call("simulatorT1",
+	#res = .Call("simulatorT1",
 		# variables	
-		nStimuli,
-		nInhibitors,
-		nCond,
-		nReacs,
-		nSpecies,
-        nSignals,
-		nMaxInputs,
-		# simList
-		finalCube,
-		ixNeg,
-		ignoreCube,
-		maxIx,		
-		# index
-		indexSignals, 
-		indexStimuli, 
-		indexInhibitors,
-		# cnolist
-		valueInhibitors,
-		valueStimuli,
-        as.integer(mode)
-	)
+	#	nStimuli,
+	#	nInhibitors,
+	#	nCond,
+	#	nReacs,
+	#	nSpecies,
+    #   nSignals,
+	#	nMaxInputs,
+	#	# simList
+	#	finalCube,
+	#	ixNeg,
+	#	ignoreCube,
+	#	maxIx,		
+	#	# index
+	#	indexSignals, 
+	#	indexStimuli, 
+	#	indexInhibitors,
+	#	# cnolist
+	#	valueInhibitors,
+	#	valueStimuli,
+    #    as.integer(mode)
+	#)
 # should not be cut because it is used in simulateTN as an input 
 #    res = res[,indexList$signals]
 	return(res)

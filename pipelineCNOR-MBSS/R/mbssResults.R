@@ -1,9 +1,12 @@
-mbssResults <- function(CNOlist, model, nCues, nameSim=NULL, mode=1){
+mbssResults <- function(CNOlist, model, nameSim=NULL, mode=1){
   mbssSim <- list()
   # recuperation of 2 lines in the simulation
   # - at time 0
   # - at the end of the simulation by default, will be improved
   # later with the dynamique time warping algorithm
+
+  nCues <- dim(CNOlist@cues)[1]
+
   for (i in 1:nCues){
     #readMaboss <- function(x) {
     mbssSimulation <- read.table(paste(nameSim, "_", i, "/", nameSim, "_", i, "_probtraj_table.csv", sep = ""), header = TRUE)

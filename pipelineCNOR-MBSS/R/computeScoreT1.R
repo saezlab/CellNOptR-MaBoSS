@@ -106,7 +106,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   print(nameSimIndiv)
   if (scoreT0){
     print("for time 0")
-    mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0)
+    mbssResultsT0 <- mbssResults(CNOlist, modelCut, nameSimIndiv, mode=0)
     print(mbssResultsT0)
   } else { ### the score will be computed without the 1st time point
     mbssResultsT0 <- NULL
@@ -114,7 +114,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   #print("for time 5")
   #mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0.5)
   print("for time 10")
-  mbssResults <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=1)
+  mbssResults <- mbssResults(CNOlist, modelCut, nameSimIndiv, mode=1)
   print(mbssResults)
   
   removal <- paste("rm -r ",nameSimIndiv,"*", sep = "")
