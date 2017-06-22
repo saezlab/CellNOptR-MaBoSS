@@ -19,7 +19,7 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, mode=1){
     } else {
       
       mbssSim[[cueRow]] <- mbssSimulation[dim(mbssSimulation)[1],]
-      
+    
     }
   }
   
@@ -84,7 +84,6 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, mode=1){
   # detection of prob and name of a species
   # addition of the values
   # /!\ maybe a problem with the NAs
-  
   return(mbssMatrix)
 }
 
