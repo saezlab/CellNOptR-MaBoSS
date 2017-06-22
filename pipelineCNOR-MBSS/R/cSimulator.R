@@ -29,6 +29,43 @@ cSimulator <- function(CNOlist, model, simList, indexList, mode=1) {
 		stop("This function needs 'reacID' and 'namesSpecies' in model")
 	}
 	
+	bndGenerator(CNOlist, model)
+
+	simDuration <- function(x, nameSimIndiv=NULL, CNOlist, model, timeMaxi=NULL){
+	    simDuration <- mabossSimulation(x, nameSimIndiv, CNOlist, model, timeMaxi)
+	    if (timeMaxi != simDuration) {
+	    	timeMaxi <- simDuration
+	      
+	      	### Remove the current simulation
+	      	nameFolder <- paste(nameSimIndiv,x,sep="_")
+	      	system(paste("rm -r ",nameFolder, "*", sep = ""))
+	      	for (afile in list.files(path = ".")){
+	        	if (str_detect(afile, nameFolder) == TRUE){
+	        	  system(paste("rm -r ", afile, sep=""))
+	        	}
+	      	}
+	      
+	      	### Recursive step
+	      	cfgGenerator(CNOlist, model, x, nameSimIndiv, timeMaxi, initState)
+	      	simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi)
+	    } else {
+		    return(timeMaxi)
+		}
+	}
+  
+
+	lenTr <- dim(CNOlist@cues)[1]
+  
+	for (x in 1:lenTr) {
+	    if (exists("timeMaxi") == FALSE) {
+	    	timeMaxi <- cfgGenerator(CNOlist, model, x)
+	    	print(timeMaxi)
+	    } else {
+	      	timeMaxi <- cfgGenerator(CNOlist, model, x, timeMaxi=timeMaxi)
+	    }
+	    timeMaxi <- simDuration(x, nameSimIndiv=NULL, CNOlist, model, timeMaxi=timeMaxi)
+	}
+
 	res <- mbssResults(CNOlist, model, mode=mode)
 	# variables
 	#nStimuli <- as.integer(length(indexList$stimulated))

@@ -73,8 +73,9 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
       ### Recursive step
       cfgGenerator(CNOlist, model, x, nameSimIndiv, timeMaxi, initState)
       simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi)
+    } else {
+      return(timeMaxi)
     }
-    return(timeMaxi)
   }
   
   
