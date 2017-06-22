@@ -144,8 +144,8 @@ gaBinaryT1<-function(
     #  print(popDoubled)
     #}
     
-    popList <- split(Pop, 1:nrow(Pop))
-    ID = 1:length(popList)
+    #popList <- split(Pop, 1:nrow(Pop))
+    #ID = 1:length(popList)
     
     #scores <- mclapply(as.list(ID), function(iID,popList){
     # res=c()

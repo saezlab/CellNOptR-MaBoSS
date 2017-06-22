@@ -14,10 +14,10 @@
 ##############################################################################
 # $Id: simulatorT1.R 3155 2013-01-09 15:24:58Z cokelaer $
 
-simulatorT1 <- function(CNOlist,model,simList,indexList, mode=1) {
+simulatorT1 <- function(CNOlist,model,simList,indexList, mode=1,scoreT0=TRUE, initState=TRUE) {
 
     
 	#simRes = rSimulatorT1(CNOlist, model, simList, indexList)
-	simRes = cSimulator(CNOlist, model, simList, indexList, mode=mode)
+	simRes = cSimulator(CNOlist, model, simList, indexList, mode=mode,scoreT0=TRUE, initState=TRUE)
 	return(simRes)
 }

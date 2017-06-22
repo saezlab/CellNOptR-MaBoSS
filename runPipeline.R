@@ -1,10 +1,11 @@
 #!/usr/bin/env zsh
 rm(list=c(ls()))
 
-setwd(dir = "/Users/celine/MaBoSS-env-2.0")
 
-source("https://bioconductor.org/biocLite.R")
-biocLite("CNORode")
+#setwd(dir = "/Users/celine/MaBoSS-env-2.0")
+
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("CNORode")
 
 library(CellNOptR)
 library(stringr)
@@ -84,8 +85,7 @@ model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
 initBstring<-rep(1,length(model$reacID))
 
 # This function is the genetic algorithm to be used to optimise a model by
-# fitting to data containing one time point
-
+# fitting to data containing one time 
 
 startRun <- proc.time()
 ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=100,
@@ -93,6 +93,7 @@ ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, p
 timeExec <- proc.time()-startRun
 print(timeExec)
 #ToyT1opt
+
 # get an eye of the function Help (section Value) to better underestand the
 # returned values
 

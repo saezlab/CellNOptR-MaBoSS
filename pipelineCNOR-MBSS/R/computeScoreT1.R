@@ -73,8 +73,9 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
       ### Recursive step
       cfgGenerator(CNOlist, model, x, nameSimIndiv, timeMaxi, initState)
       simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi)
+    } else {
+      return(timeMaxi)
     }
-    return(timeMaxi)
   }
   
   
@@ -203,7 +204,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   nDataP <- sum(!is.na(CNOlist@signals[[timeIndex]]))
   Score <- Score/nDataP
   
-  print(paste("Number of no-NA data : ", nDataP, sep=""))
+  #print(paste("Number of no-NA data : ", nDataP, sep=""))
   print(paste("Final score : ", Score, sep=""))
   
   return(Score)

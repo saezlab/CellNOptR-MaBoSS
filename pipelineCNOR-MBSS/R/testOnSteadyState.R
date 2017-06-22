@@ -152,9 +152,9 @@ testOnSteadyState <- function(treatmt, nameSimIndiv, CNOlist, model, timeMaxi) {
     i <- 1
     addTime <- FALSE
     #slopeValues <- na.omit(slopeValues)
-    while(i <= length(slopeValues) && addTime == FALSE){
+    while((i <= length(slopeValues) && addTime == FALSE) && (timeMaxi < max(CNOlist@timepoints)*5)){
       #print(paste("the slope : ", slopeValues[i], " and the RSE : ", rseValues[i], sep = ""))
-      if ((slopeValues[i] > 0.0001 || rseValues[i] > 0.0001) && (timeMaxi < max(CNOlist@timepoints)*5)) {
+      if (slopeValues[i] > 0.0001 || rseValues[i] > 0.0001) {
         addTime <- TRUE
       }
       i <- i + 1
