@@ -15,7 +15,7 @@
 # $Id: cutAndPlotResultsT1.R 4181 2013-11-28 11:04:35Z cokelaer $
 
 cutAndPlotResultsT1 <- function(model, bString, simList=NULL, CNOlist, indexList=NULL,
- plotPDF=FALSE, tag=NULL, tPt=CNOlist@timepoints[2], plotParams=list(maxrow=10))
+ plotPDF=FALSE, tag=NULL, tPt=CNOlist@timepoints[2], plotParams=list(maxrow=10),  scoreT0=TRUE, initState=TRUE)
 {
 
     if ((class(CNOlist)=="CNOlist")==FALSE){
@@ -37,11 +37,11 @@ cutAndPlotResultsT1 <- function(model, bString, simList=NULL, CNOlist, indexList
     modelCut <- cutModel(model, bString)
     simListCut <- cutSimList(simList, bString)
     # t0
-    Sim0 <- simulatorT0(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList)
+    Sim0 <- simulatorT0(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList, scoreT0=TRUE, initState=TRUE)
     simRes0 <- as.matrix(Sim0[,indexList$signals,drop=F])
     #simRes0 = Sim0
     # t1
-    Sim <- simulatorT1(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList)
+    Sim <- simulatorT1(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList, scoreT0=TRUE, initState=TRUE)
     simRes <- as.matrix(Sim[,indexList$signals,drop=F])
     #simRes = Sim
 
