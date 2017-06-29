@@ -19,9 +19,10 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
   all_spec <- modelCut$namesSpecies
   stim <- colnames(CNOlist@stimuli)
   inhib <- colnames(CNOlist@inhibitors)
+  measured <- colnames(CNOlist@signals$`0`)
   
   ###################
-  #### the RATES ####
+  #### the Rates ####
   ###################
   
   #### All the nodes less those that can be inhibited have their rate set to 1
@@ -59,15 +60,25 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
     write(istate, file = dest_file, append = TRUE)
   }
   
-  #### initial condition for all the other nodes, depends on the parameter initState
-  if (initState){ ### all the nodes that have not inhibitors or stimuli are initialized to 0
-    nodes <- setdiff(all_spec, stim)
-    for (aNode in nodes){
+  #### the initial state is set to 1 if the experimental data shows that it is over than 0.5 at the beginning of the experiment
+  for (aNode in measured){
+    if (CNOlist@signals$`0`[treatmt,aNode] > 0.5){
+      istate <- paste(aNode, ".istate = 1;", sep="")
+      write(istate, file = dest_file, append = TRUE)
+    } else {
       istate <- paste(aNode, ".istate = 0;", sep="")
       write(istate, file = dest_file, append = TRUE)
     }
   }
-  else { ### only the inhibited nodes will be initialized to 0
+
+  #### initial condition for all the other nodes, depends on the parameter initState
+  if (initState){ ### all the nodes that have not inhibitors or stimuli are initialized to 0
+    nodes <- setdiff(all_spec, union(stim, measured))
+    for (aNode in nodes){
+      istate <- paste(aNode, ".istate = 0;", sep="")
+      write(istate, file = dest_file, append = TRUE)
+    }
+  } else { ### only the inhibited nodes will be initialized to 0
     for (anInh in inhib){
       if (CNOlist@inhibitors[treatmt, anInh] == 1){
         istate <- paste(anInh, ".istate = 0;", sep="")
