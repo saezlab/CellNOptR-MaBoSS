@@ -61,11 +61,20 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
   }
   
   #### the initial state is set to 1 if the experimental data shows that it is over than 0.5 at the beginning of the experiment
-  for (aNode in measured){
-    initialValue <- CNOlist@signals$`0`[treatmt,aNode]
-    initialValue <- str_replace(initialValue, "0.", ".")
-    istate <- paste("[",aNode,"].istate = (1-0",initialValue,") [0] , ", initialValue, " [1];", sep="")
-    write(istate, file = dest_file, append = TRUE)
+  #for (aNode in measured){
+  #  initialValue <- CNOlist@signals$`0`[treatmt,aNode]
+  #  initialValue <- str_replace(initialValue, "0.", ".")
+  #  istate <- paste("[",aNode,"].istate = (1-0",initialValue,") [0] , ", initialValue, " [1];", sep="")
+  #  write(istate, file = dest_file, append = TRUE)
+  #}
+  for (aNode in measured) {
+    if (CNOlist@signals$`0`[treatmt,aNode] > 0.5) {
+      istate <- paste(aNode, ".istate = 1;", sep="")
+      write(istate, file = dest_file, append = TRUE)
+    } else {
+      istate <- paste(aNode, ".istate = 0;", sep="")
+      write(istate, file = dest_file, append = TRUE)
+    }
   }
 
   #### initial condition for all the other nodes, depends on the parameter initState
