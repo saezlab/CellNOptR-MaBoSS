@@ -105,18 +105,19 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   
   
   print(nameSimIndiv)
-  if (scoreT0){
-    print("for time 0")
-    mbssResultsT0 <- mbssResults(CNOlist, modelCut, nameSimIndiv, mode=0)
-    print(mbssResultsT0)
-  } else { ### the score will be computed without the 1st time point
-    mbssResultsT0 <- NULL
-  }
+  #if (scoreT0){
+  #  print("for time 0")
+  #  mbssResultsT0 <- mbssResults(CNOlist, modelCut, mode=0)
+  #  print(mbssResultsT0)
+  #} else { ### the score will be computed without the 1st time point
+  #  mbssResultsT0 <- NULL
+  #}
   #print("for time 5")
   #mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0.5)
-  print("for time 10")
-  mbssResults <- mbssResults(CNOlist, modelCut, nameSimIndiv, mode=1)
-  print(mbssResults)
+  #print("for time 10")
+  mbssResults <- mbssResults(CNOlist, modelCut, nameSim=nameSimIndiv)
+  #print("results of MBSS simulations")
+  #print(mbssResults)
   
   removal <- paste("rm -r ",nameSimIndiv,"*", sep = "")
   system(removal)
@@ -182,20 +183,20 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   #simResults = simResults[, indexList$signals]
   #nInTot = length(which(model$interMat == -1))
   
-  #print(simResults)
+  #print(mbssResults)
   
   print("Ready to compute the Score")
   #Compute the score
-  Score <- getFit(
+  Score <- getFit_multiTimePoints(
     simResults=mbssResults,
     CNOlist=CNOlist,
     model=modelCut,
-    indexList=indexList,
+    #indexList=indexList,
     timePoint=timeIndex,
     sizeFac=sizeFac,
     NAFac=NAFac,
     nInTot=length(which(model$interMat == -1)),
-    simResultsT0=mbssResultsT0)
+    simResultsT0=NULL)
   
   
   if ((class(CNOlist)=="CNOlist")==FALSE){

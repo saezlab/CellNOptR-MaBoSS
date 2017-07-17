@@ -9,14 +9,14 @@ rm(list=c(ls()))
 
 library(CellNOptR)
 library(stringr)
-library(parallel)
+#library(parallel)
 #library(doParallel)
 
 #registerDoParallel(cores=(detectCores(all.tests = FALSE, logical = TRUE)-1))
 #getDoParWorkers()
 
 #system("mkdir probPlots")
-#system("mkdir allCond")
+system("mkdir allCond")
 
 ###### Working with arguments
 #args <- commandArgs(trailingOnly = TRUE)
@@ -36,7 +36,15 @@ library(parallel)
 # experimental data : provides studied species and timepoints
 # there is also a list of treatments that does not appear by the simple
 # command "> CNOlistToy"
-CNOlistToy = CNOlist("ToyDataMMB.csv")
+
+#CNOlistToy = CNOlist("ToyDataMMB.csv")
+#CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
+#                               package="CNORode"))
+#CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPBode.csv");
+CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
+#CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
+#                               package="CNORode"))
+#CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB.csv");
 #CNOlistToy
 # Another way to visualize the data and export the plot on a .pdf format
 #plot(CNOlistToy)
@@ -44,8 +52,14 @@ CNOlistToy = CNOlist("ToyDataMMB.csv")
 
 
 # PKN model obtained from CytoScape
-pknmodel<-readSIF("ToyPKNMMB.sif")
-
+#pknmodel<-readSIF("ToyPKNMMB.sif")
+#model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
+#         package="CNORode"));
+#model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
+model=readSIF("/Users/celine/model2nodes/model2nodes.sif");
+#model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
+#         package="CNORode"));
+#model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
 
 # Having loaded the data set and corresponding model, we run a check
 # to make sure that our data and model were correctly loaded and that our
@@ -67,7 +81,7 @@ pknmodel<-readSIF("ToyPKNMMB.sif")
 # and expansion
 # preprocessing function is available and makes the following 3 steps in 1
 # command line
-model <- preprocessing(CNOlistToy, pknmodel, expansion=TRUE, compression=TRUE, cutNONC=TRUE, verbose=FALSE)
+model <- preprocessing(CNOlistToy, model, expansion=FALSE, compression=TRUE, cutNONC=TRUE, verbose=FALSE)
 #checkSignals(CNOlistToy,model) # also checked in gaBinaryT1() function
 #plotModel(model, CNOlistToy)
 
@@ -79,16 +93,29 @@ model <- preprocessing(CNOlistToy, pknmodel, expansion=TRUE, compression=TRUE, c
 # creation of a vector as long as the number of influences in the model
 # obtained after preprocessing
 initBstring<-rep(1,length(model$reacID))
-
+#print(initBstring)
 # This function is the genetic algorithm to be used to optimise a model by
-# fitting to data containing one time point
-startRun <- proc.time()
-
-ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=50,
-                     verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
-timeExec <- proc.time()-startRun
+# fitting to data containing one time
+#timeHist = c()
+#scoreHist = c()
+#for (x in seq(1:15)) {
+  startRun <- proc.time()
+  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=2, maxGens=3,elitism=0,sizeFac=0,
+                       verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
+  timeExec <- proc.time()-startRun
+#  timeHist <- append(timeHist, timeExec[1])
+#  scoreHist <- append(scoreHist,ToyT1opt$bScore)
+#}
+#pdf("evolTime.pdf")
+#hist(timeHist)
+#dev.off()
+#pdf("evolScore.pdf")
+#hist(scoreHist)
+#hist(scoreHist, breaks = 10)
+#hist(scoreHist, breaks = 12)
+#dev.off()
 print(timeExec)
-
+#ToyT1opt
 ToyT1opt
 # get an eye of the function Help (section Value) to better underestand the
 # returned values
@@ -113,13 +140,22 @@ dev.off()
 ##  Plotting the optimised model  ##
 ####################################
 
-par(mfrow=c(1,2))
+#par(mfrow=c(1,2))
+#pdf("bestTopology_PKN.pdf")
+#plotModel(model, CNOlistToy, bString=ToyT1opt$bString)
+#bs = mapBack(model, pknmodel, ToyT1opt$bString)
+#plotModel(pknmodel, CNOlistToy, bs, compressed=model$speciesCompressed)
+#dev.off()
+#par(mfrow=c(1,1))
+
+#par(mfrow=c(1,2))
 pdf("bestTopology_PKN.pdf")
 plotModel(model, CNOlistToy, bString=ToyT1opt$bString)
-bs = mapBack(model, pknmodel, ToyT1opt$bString)
-plotModel(pknmodel, CNOlistToy, bs, compressed=model$speciesCompressed)
+#bs = mapBack(model, pknmodel, ToyT1opt$bString)
+#plotModel(pknmodel, CNOlistToy, bs, compressed=model$speciesCompressed)
 dev.off()
-par(mfrow=c(1,1))
+#par(mfrow=c(1,1))
+
 # Processed model (left) and original PKN (right)
 # The edges are on (black or red) or off (grey or pink) according to the
 # best set of parameters found during the optimisation (the best bit string)

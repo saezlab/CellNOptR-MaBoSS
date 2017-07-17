@@ -51,13 +51,13 @@ cSimulator <- function(CNOlist, model, simList, indexList, mode=1,scoreT0=TRUE, 
     	}
     	timeMaxi <- simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi=timeMaxi)
   	}
-  	print(timeMaxi)
-  	print(mode)
-  	if (mode == 0) {
-	  	res <- mbssResults(CNOlist, model, nameSimIndiv, mode=0)
-	} else if (mode == 1) {
-	 	res <- mbssResults(CNOlist, model, nameSimIndiv, mode=1)
-	}
+  	#print(timeMaxi)
+  	#print(mode)
+  	#if (mode == 0) {
+	  	res <- mbssResults(CNOlist, model, nameSim=nameSimIndiv)
+	#} else if (mode == 1) {
+	# 	res <- mbssResults(CNOlist, model, nameSimIndiv, mode=1)
+	#}
 
 	removal <- paste("rm -r ",nameSimIndiv,"*", sep = "")
   	system(removal)
@@ -67,7 +67,7 @@ cSimulator <- function(CNOlist, model, simList, indexList, mode=1,scoreT0=TRUE, 
     	}
   	}
 
-  	print(res)
+  	#print(res)
 	# variables
 	#nStimuli <- as.integer(length(indexList$stimulated))
 	#nInhibitors <- as.integer(length(indexList$inhibited))

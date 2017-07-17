@@ -13,7 +13,7 @@ cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NUL
   file.copy("basicFile.cfg", dest_file, overwrite = TRUE)
   
   #### Max time of the simulation
-  runTime <- paste("max_time = ", timeMaxi, ";", sep="")
+  runTime <- paste("max_time = ", timeMaxi+0.10, ";", sep="")
   write(runTime, file = dest_file, append = TRUE)
   
   all_spec <- modelCut$namesSpecies

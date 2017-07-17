@@ -6,11 +6,30 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
   write("", file = fileName)
   nameSpecies <- c(model$namesSpecies)
   nameReac <- c(model$reacID)
-  
+  stim <- colnames(CNOlist@stimuli)
+
+
+  if (length(nameReac) == 0) {
+    for (spec in setdiff(nameSpecies,stim)) {
+      write(paste("Node", spec, "{", sep = " "), file = fileName, append = TRUE)
+      write("  logic = (0);", file = fileName, append=TRUE)
+      write(paste("  rate_up = @logic ? $u_",spec," : 0;",sep = ""), file = fileName, append = TRUE)
+      write(paste("  rate_down = @logic ? 0 : $d_",spec,";",sep = ""), file = fileName, append = TRUE)
+      write("}", file = fileName, append = TRUE)
+    }
+    for (spec in stim) {
+      write(paste("Node", spec, "{", sep = " "), file = fileName, append = TRUE)
+      write(paste("  logic = (",spec,");", sep=""), file = fileName, append=TRUE)
+      write(paste("  rate_up = @logic ? $u_",spec," : 0;",sep = ""), file = fileName, append = TRUE)
+      write(paste("  rate_down = @logic ? 0 : $d_",spec,";",sep = ""), file = fileName, append = TRUE)
+      write("}", file = fileName, append = TRUE)
+    }
+  }
+
   # May be useless, CNOR doesn't allow models with 1 reaction
-  if (length(nameReac) == 1){
-    target <- str_split(model$reacID, "=", simplify = TRUE)[2]
-    reg <- str_split(model$reacID, "=", simplify = TRUE)[1]
+  else if (length(nameReac) == 1) {
+    target <- str_split(model$reacID[1], "=", simplify = TRUE)[2]
+    reg <- str_split(model$reacID[1], "=", simplify = TRUE)[1]
     
     write(paste("Node", target, "{", sep = " "), file = fileName, append = TRUE)
     write("  logic = ", file = fileName, append=TRUE)
@@ -21,7 +40,7 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
       write(paste("  rate_down = @logic ? 0 : $d_",target,";",sep = ""), file = fileName, append = TRUE)
       write("}", file = fileName, append = TRUE)
     } else {
-      reg <- str_split(reg,"+", simplify = TRUE)
+      reg <- str_split(reg,"[+]", simplify = TRUE)
       firstElt = TRUE
       write("(", file = fileName, append = TRUE)
       for (aReg in reg) {
