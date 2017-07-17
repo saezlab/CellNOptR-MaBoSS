@@ -40,8 +40,8 @@ system("mkdir allCond")
 #CNOlistToy = CNOlist("ToyDataMMB.csv")
 #CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
 #                               package="CNORode"))
-#CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPBode.csv");
-CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
+CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPBode.csv");
+#CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
 #CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
 #                               package="CNORode"))
 #CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB.csv");
@@ -55,8 +55,8 @@ CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
 #pknmodel<-readSIF("ToyPKNMMB.sif")
 #model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
 #         package="CNORode"));
-#model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
-model=readSIF("/Users/celine/model2nodes/model2nodes.sif");
+model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
+#model=readSIF("/Users/celine/model2nodes/model2nodes.sif");
 #model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
 #         package="CNORode"));
 #model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
@@ -100,7 +100,7 @@ initBstring<-rep(1,length(model$reacID))
 #scoreHist = c()
 #for (x in seq(1:15)) {
   startRun <- proc.time()
-  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=2, maxGens=3,elitism=0,sizeFac=0,
+  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=50,elitism=5,#sizeFac=0,
                        verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
   timeExec <- proc.time()-startRun
 #  timeHist <- append(timeHist, timeExec[1])

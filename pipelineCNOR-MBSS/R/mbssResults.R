@@ -11,12 +11,12 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
   for (i in 1:nCues){
     #readMaboss <- function(x) {
     mbssSimulation <- read.table(paste(nameSim, "_", i, "/", nameSim, "_", i, "_probtraj_table.csv", sep = ""), header = TRUE)
-    print(colnames(mbssSimulation))
+    #print(colnames(mbssSimulation))
 
     #### index of the columns of interest
     colProb <- c()
     for (aColName in colnames(mbssSimulation)) {
-      print(aColName)
+      #print(aColName)
       if ((str_detect(aColName,"^Prob")==TRUE) || (str_detect(aColName, "^Time")==TRUE)) {
         colProb <- append(colProb, which(colnames(mbssSimulation) == aColName,arr.ind=TRUE))
       }
@@ -36,7 +36,7 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
 
 
     }
-    print(mbssSim[[cueRow]])
+    #print(mbssSim[[cueRow]])
   }
 
 
@@ -44,19 +44,19 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
   indexRO <- list()
   for (aReadOut in colnames(CNOlistToy@signals$`0`)) {
     indexRO[[aReadOut]] <- list()
-    print(aReadOut)
+    #print(aReadOut)
     for (i in 1:nCues){
       aCue <- paste(as.character(as.numeric(CNOlist@cues[i,])), collapse = "")
       indexRO[[aReadOut]][[aCue]] <- c()
       for (aTransState in names(mbssSim[[aCue]][[1]])){
         if((str_detect(aTransState, aReadOut)==TRUE) && (str_detect(aTransState,"^Time") == FALSE)) {
-          print(aTransState)
+          #print(aTransState)
           indexRO[[aReadOut]][[aCue]] <- c(indexRO[[aReadOut]][[aCue]], which(names(mbssSim[[aCue]][[1]])==aTransState))
         }
       }
     }
   }
-  print(indexRO)
+  #print(indexRO)
   #############################
   
   mbssMatrix <- list()
@@ -71,22 +71,23 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
   
   #############################
   addProbabilities <- function(x, mat=NULL, tp=NULL){
-    print(paste(x, tp, sep="    "))
+    #print(paste(x, tp, sep="    "))
     mtxIndex <- which(mat==x, arr.ind = TRUE)
-    print(mtxIndex)
+    #print(mtxIndex)
     cueName <- rownames(mat)[mtxIndex[1]]
-    print(cueName)
+    #print(cueName)
     rdtoutName <- colnames(mat)[mtxIndex[2]]
-    print(rdtoutName)
+    #print(rdtoutName)
     rdtoutIndices <- indexRO[[rdtoutName]][[cueName]]
-    print(rdtoutIndices)
+    #print(rdtoutIndices)
     
-    mat[cueName,rdtoutName] <- 0
 
     if (length(rdtoutIndices) != 0){
       mat[cueName,rdtoutName] <- sum(mbssSim[[cueName]][[tp]][rdtoutIndices])
+    } else {
+      mat[cueName,rdtoutName] <- 0
     }
-    print(mat[cueName,rdtoutName])
+    #print(mat[cueName,rdtoutName])
   }
 
 
@@ -96,10 +97,11 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
     #print(dim(mbssMatrix[[tp]]))
     #print(rownames(mbssMatrix[[tp]]))
     #print(colnames(mbssMatrix[[tp]]))
-    #print(tp)
-    print(mbssMatrix[[tp]])
+    print(tp)
+    #print(mbssMatrix[[tp]])
     mbssMatrix[[tp]] <- apply(mbssMatrix[[tp]], c(1,2), addProbabilities, mat=mbssMatrix[[tp]], tp=tp)
     print(mbssMatrix[[tp]])
+    #print("test lalala")
   }
   ############################
   
