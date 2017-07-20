@@ -121,5 +121,7 @@ cSimulator <- function(CNOlist, model, simList, indexList, mode=1,scoreT0=TRUE, 
 	#)
 # should not be cut because it is used in simulateTN as an input 
 #    res = res[,indexList$signals]
+	print("print res of cSimulator")
+	print(res)
 	return(res)
 }

@@ -7,6 +7,7 @@ rm(list=c(ls()))
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("doParallel")
 
+#library(CNORode2017)
 library(CellNOptR)
 library(stringr)
 #library(parallel)
@@ -16,7 +17,7 @@ library(stringr)
 #getDoParWorkers()
 
 #system("mkdir probPlots")
-system("mkdir allCond")
+#system("mkdir allCond")
 
 ###### Working with arguments
 #args <- commandArgs(trailingOnly = TRUE)
@@ -100,7 +101,7 @@ initBstring<-rep(1,length(model$reacID))
 #scoreHist = c()
 #for (x in seq(1:15)) {
   startRun <- proc.time()
-  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=50,elitism=5,#sizeFac=0,
+  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=100,elitism=5,#sizeFac=0,
                        verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
   timeExec <- proc.time()-startRun
 #  timeHist <- append(timeHist, timeExec[1])
@@ -121,13 +122,20 @@ ToyT1opt
 # returned values
 
 bs <- ToyT1opt$bString
-score <- computeScoreT1(CNOlistToy, model, bs, simList=NULL, indexList=NULL, sizeFac=0.0001, NAFac=1, timeIndex=2)
+#score <- computeScoreT1(CNOlistToy, model, bs, simList=NULL, indexList=NULL, sizeFac=0.0001, NAFac=1, timeIndex=2)
 
 
 # This function takes a model and an optimised bitstring, it cuts the
 # model according to the bitstring and plots the results of the simulation
 # along with the experimental data
-cutAndPlot(model=model, bStrings=list(ToyT1opt$bString), CNOlist=CNOlistToy,plotPDF=TRUE)
+#cutAndPlot(model=model, bStrings=list(ToyT1opt$bString), CNOlist=CNOlistToy,plotPDF=TRUE)
+modelCut <- cutModel(model, bs)
+sim_data = cSimulator(CNOlistToy, modelCut, scoreT0=TRUE, initState=TRUE)
+plotParams=list(margin=0.1, width=15, height=12, cmap_scale=1, cex=1.6, ymin=NULL)
+plotOptimResultsPan(sim_data, yInterpol=NULL, xCoords=NULL,
+             CNOlist=CNOlist(CNOlistToy), formalism="ode", pdf=FALSE,
+             plotParams=plotParams,pdfFileName="", tPt=NULL)
+
 # one row for a treatment, each species has its column
 
 # plots the evolution of best fit and average fit against generations on a .pdf file
