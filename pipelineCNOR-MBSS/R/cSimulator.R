@@ -14,47 +14,42 @@
 ##############################################################################
 # $Id$
 
-cSimulator <- function(CNOlist, model, simList, indexList, mode=1,scoreT0=TRUE, initState=TRUE) {
+cSimulator <- function(CNOlist, model, simList, indexList, mode=1,scoreT0=TRUE, initState=TRUE, multiTP=NULL) {
+
+	if (is.null(multiTP) == TRUE) {
+    	if (length(CNOlist@timepoints) > 2) {
+    	  multiTP = TRUE
+    	} else {
+    	  multiTP = FALSE
+    	}
+  	}
+
 	lenTr <- dim(CNOlist@cues)[1]
 	nameSimIndiv <- "best_solution"
 	bndGenerator(CNOlist, model, nameSimIndiv)
+  
+  
+	if (multiTP == TRUE) {
+	    for (x in 1:lenTr) {
+	      	cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
+	      	system(paste("source ./MaBoSS.env ; perl ./tools/MBSS_FormatTable.pl ",nameSimIndiv,".bnd ",nameSimIndiv,"_",x,".cfg", sep=""))
+	    }
+  	} else {
+	    for (x in 1:lenTr) {
+	      if (exists("timeMaxi") == FALSE) {
+	        timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
+	        print(timeMaxi)
+	      } else {
+	        timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv, timeMaxi)
+	      }
+	      timeMaxi <- simDuration(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)
+	    }
+	}
 
-	simDuration <- function(x, nameSimIndiv, CNOlist, model, timeMaxi){
-    	simDuration <- mabossSimulation(x, nameSimIndiv, CNOlist, model, timeMaxi)
-    	if (timeMaxi != simDuration) {
-    		timeMaxi <- simDuration
-      
-    		### Remove the current simulation
-    		nameFolder <- paste(nameSimIndiv,x,sep="_")
-    		system(paste("rm -r ",nameFolder, "*", sep = ""))
-     		for (afile in list.files(path = ".")){
-        		if (str_detect(afile, nameFolder) == TRUE){
-          			system(paste("rm -r ", afile, sep=""))
-        		}
-      		}
-      
-    		### Recursive step
-    		cfgGenerator(CNOlist, model, x, nameSimIndiv, timeMaxi, initState)
-    		simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi)
-    	} else {
-    		return(timeMaxi)
-    	}
-  	}
-  
-  
-  
-	for (x in 1:lenTr) {
-    	if (exists("timeMaxi") == FALSE) {
-    		timeMaxi <- cfgGenerator(CNOlist, model, x, nameSimIndiv)
-    	} else {
-    		timeMaxi <- cfgGenerator(CNOlist, model, x, nameSimIndiv, timeMaxi=timeMaxi)
-    	}
-    	timeMaxi <- simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi=timeMaxi)
-  	}
   	#print(timeMaxi)
   	#print(mode)
   	#if (mode == 0) {
-	  	res <- mbssResults(CNOlist, model, nameSim=nameSimIndiv)
+	  	res <- mbssResults(CNOlist, model, nameSim=nameSimIndiv, multiTP=multiTP)
 	#} else if (mode == 1) {
 	# 	res <- mbssResults(CNOlist, model, nameSimIndiv, mode=1)
 	#}

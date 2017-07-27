@@ -1,4 +1,4 @@
-mbssResults <- function(CNOlist, model, nameSim=NULL){
+mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NULL){
   mbssSim <- list()
   # recuperation of 2 lines in the simulation
   # - at time 0
@@ -6,7 +6,12 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
   # later with the dynamique time warping algorithm
 
   nCues <- dim(CNOlist@cues)[1]
-  timePoints <- CNOlist@timepoints
+
+  if (multiTP == TRUE) {
+    timePoints <- CNOlist@timepoints  
+  } else {
+    timePoints <- c(1,2)
+  }
 
   for (i in 1:nCues){
     #readMaboss <- function(x) {
@@ -25,16 +30,32 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
     #### Selection of the lines
     cueRow <- paste(as.character(as.numeric(CNOlist@cues[i,])), collapse = "")
     mbssSim[[cueRow]] = list()
-    for (aTP in timePoints) {
-      mbssSim[[cueRow]][[as.character(aTP)]] <- mbssSimulation[which(mbssSimulation$Time==aTP),colProb]
+    if (multiTP == TRUE) {
+      for (aTP in timePoints) {
+        mbssSim[[cueRow]][[as.character(aTP)]] <- mbssSimulation[which(mbssSimulation$Time==aTP),colProb]
 
-      for (aColName in colnames(mbssSim[[cueRow]][[as.character(aTP)]])) {
+        for (aColName in colnames(mbssSim[[cueRow]][[as.character(aTP)]])) {
+          if (str_detect(aColName, "^Prob") == TRUE) {
+            colnames(mbssSim[[cueRow]][[as.character(aTP)]]) [which(aColName == colnames(mbssSim[[cueRow]][[as.character(aTP)]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
+          }
+        }
+      }
+    } else {
+      mbssSim[[cueRow]][["1"]] <- mbssSimulation[which(mbssSimulation$Time == 0),colProb]
+
+      for (aColName in colnames(mbssSim[[cueRow]][["1"]])) {
         if (str_detect(aColName, "^Prob") == TRUE) {
-          colnames(mbssSim[[cueRow]][[as.character(aTP)]]) [which(aColName == colnames(mbssSim[[cueRow]][[as.character(aTP)]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
+          colnames(mbssSim[[cueRow]][["1"]]) [which(aColName == colnames(mbssSim[[cueRow]][["1"]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
         }
       }
 
-
+      print(which(mbssSimulation$Time == max(mbssSimulation$Time)))
+      mbssSim[[cueRow]][["2"]] <- mbssSimulation[which(mbssSimulation$Time == max(mbssSimulation$Time)),colProb]
+      for (aColName in colnames(mbssSim[[cueRow]][["2"]])) {
+        if (str_detect(aColName, "^Prob") == TRUE) {
+          colnames(mbssSim[[cueRow]][["2"]]) [which(aColName == colnames(mbssSim[[cueRow]][["2"]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
+        }
+      }
     }
     #print(mbssSim[[cueRow]])
   }
@@ -42,7 +63,7 @@ mbssResults <- function(CNOlist, model, nameSim=NULL){
 
   ################################
   indexRO <- list()
-  for (aReadOut in colnames(CNOlistToy@signals$`0`)) {
+  for (aReadOut in colnames(CNOlist@signals$`0`)) {
     indexRO[[aReadOut]] <- list()
     #print(aReadOut)
     for (i in 1:nCues){

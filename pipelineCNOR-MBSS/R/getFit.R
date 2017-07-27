@@ -50,27 +50,39 @@ getFit<-function(
             tPt<-timePoint
         }
     }
-  
     #print(simResults)
     #print(CNOlist@signals[[tPt]])
   
     # if t0 is provided and we are interested in t1
     # then  score is based on t1 but also t0
-    if (tPt == 2 && is.null(simResultsT0)==FALSE){
-        Diff0 <- simResultsT0 - CNOlist@signals[[1]]
-        Diff <- simResults - CNOlist@signals[[tPt]]
+    if (tPt == 2 ) {#&& is.null(simResultsT0)==FALSE){
+
+        print("Time 0")
+        print("print the simulation of mbss")
+        print(simResults[[1]])
+        print("print the data")
+        print(CNOlist@signals[[1]])
+        print("Time maxi")
+        print("print the simulation of mbss")
+        print(simResults[[2]])
+        print("print the data")
+        print(CNOlist@signals[[tPt]])
+
+
+        Diff0 <- simResults[[1]] - CNOlist@signals[[1]]
+        Diff <- simResults[[2]] - CNOlist@signals[[tPt]]
         r0 <- Diff0^2
         r <- Diff^2
         r <- rbind(r0, r) # we can concatenate because it's matricial computation.
         deviationPen<-sum(r[!is.na(r)])/2
     }# otherwise, no need to take to into account
     else{
-        Diff<-simResults-CNOlist@signals[[tPt]]
+        Diff<-simResults[[2]]-CNOlist@signals[[tPt]]
         r<-Diff^2
         deviationPen<-sum(r[!is.na(r)])
     }
     
-
+    print(deviationPen)
     NAPen<-NAFac*length(which(is.na(simResults)))
 
     nDataPts<-dim(CNOlist@signals[[tPt]])[1]*dim(CNOlist@signals[[tPt]])[2]

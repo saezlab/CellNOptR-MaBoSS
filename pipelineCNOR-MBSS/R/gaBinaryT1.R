@@ -31,7 +31,8 @@ gaBinaryT1<-function(
   priorBitString=NULL,
   timeIndex=2,
   scoreT0=TRUE,
-  initState=TRUE){
+  initState=TRUE,
+  multiTP=NULL){
   
   nameGen <- 0
   
@@ -43,7 +44,16 @@ gaBinaryT1<-function(
   if ((class(CNOlist)=="CNOlist")==FALSE){
     CNOlist = CellNOptR::CNOlist(CNOlist)
   }
-  
+
+  if (is.null(multiTP) == TRUE) {
+    if (length(CNOlist@timepoints) > 2) {
+      multiTP = TRUE
+    } else {
+      multiTP = FALSE
+    }
+  }
+  print(multiTP)
+
   checkSignals(CNOlist, model)
   
   # should be after CNOlist conversion
@@ -91,7 +101,7 @@ gaBinaryT1<-function(
       return(scores2Hash[[key]])
     } else {
       Score = computeScoreT1(CNOlist, model, x, simList, indexList,
-                             sizeFac, NAFac, timeIndex, title, scoreT0, initState)
+                             sizeFac, NAFac, timeIndex, title, scoreT0, initState, multiTP=multiTP)
       #if (length(scores2Hash)<1000){
         scores2Hash[[key]] =  Score
       #}

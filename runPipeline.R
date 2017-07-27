@@ -38,39 +38,31 @@ library(stringr)
 # there is also a list of treatments that does not appear by the simple
 # command "> CNOlistToy"
 
-#CNOlistToy = CNOlist("ToyDataMMB.csv")
-#CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
-#                               package="CNORode"))
-CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPBode.csv");
-#CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
-#CNOlistToy=CNOlist(system.file("doc", "ToyModelMMB_FeedbackAnd.csv",
-#                               package="CNORode"))
-#CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB.csv");
-#CNOlistToy
-# Another way to visualize the data and export the plot on a .pdf format
+workingModel = 1
+
+if (workingModel == 1){ ## 6 time points
+	CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPBode.csv");
+	model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
+	multiTP <- TRUE
+
+} else if (workingModel == 2) { ## 6 time points, only 2 nodes
+	CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
+	model=readSIF("/Users/celine/model2nodes/model2nodes.sif");
+
+} else if (workingModel == 3) { ## 2 time points, for steady state
+	CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB2.csv");
+	model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
+	multiTP <- FALSE
+}
+
+#### Works for 	(3,FALSE)
+#### Works for	(1,TRUE)
+#### Works for	(1,NULL)
+#### Works for	(3,NULL)
+#### Works for	(1,FALSE) but Rplot.pdf just 1 box over the 60 !!
+#### Works for	(3,TRUE)
+
 #plot(CNOlistToy)
-#plotCNOlistPDF(CNOlist=CNOlistToy,filename="ToyModelGraph.pdf")
-
-
-# PKN model obtained from CytoScape
-#pknmodel<-readSIF("ToyPKNMMB.sif")
-#model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
-#         package="CNORode"));
-model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
-#model=readSIF("/Users/celine/model2nodes/model2nodes.sif");
-#model=readSIF(system.file("doc", "ToyModelMMB_FeedbackAnd.sif",
-#         package="CNORode"));
-#model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
-
-# Having loaded the data set and corresponding model, we run a check
-# to make sure that our data and model were correctly loaded and that our
-# data match our model (i.e. that species that were inhibited/stimulated
-# measured in our data set are present in our model).
-# Then 
-#checkSignals(CNOlistToy,pknmodel) # also checked in gaBinaryT1() function
-
-# View of the PKN model previously loaded from a .sif file
-# here, the model is not trained on the data
 #plotModel(pknmodel, CNOlistToy)
 
 
@@ -102,7 +94,7 @@ initBstring<-rep(1,length(model$reacID))
 #for (x in seq(1:15)) {
   startRun <- proc.time()
   ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=100,elitism=5,#sizeFac=0,
-                       verbose=TRUE, scoreT0=TRUE, initState=TRUE)#, nameSim=nameSim)
+                       verbose=TRUE, scoreT0=TRUE, initState=TRUE, multiTP=multiTP)#, nameSim=nameSim)
   timeExec <- proc.time()-startRun
 #  timeHist <- append(timeHist, timeExec[1])
 #  scoreHist <- append(scoreHist,ToyT1opt$bScore)
@@ -121,6 +113,10 @@ ToyT1opt
 # get an eye of the function Help (section Value) to better underestand the
 # returned values
 
+pdf("bestTopology_PKN.pdf")
+plotModel(model, CNOlistToy, bString=ToyT1opt$bString)
+dev.off()
+
 bs <- ToyT1opt$bString
 #score <- computeScoreT1(CNOlistToy, model, bs, simList=NULL, indexList=NULL, sizeFac=0.0001, NAFac=1, timeIndex=2)
 
@@ -130,7 +126,7 @@ bs <- ToyT1opt$bString
 # along with the experimental data
 #cutAndPlot(model=model, bStrings=list(ToyT1opt$bString), CNOlist=CNOlistToy,plotPDF=TRUE)
 modelCut <- cutModel(model, bs)
-sim_data = cSimulator(CNOlistToy, modelCut, scoreT0=TRUE, initState=TRUE)
+sim_data = cSimulator(CNOlistToy, modelCut, scoreT0=TRUE, initState=TRUE, multiTP=multiTP)
 plotParams=list(margin=0.1, width=15, height=12, cmap_scale=1, cex=1.6, ymin=NULL)
 plotOptimResultsPan(sim_data, yInterpol=NULL, xCoords=NULL,
              CNOlist=CNOlist(CNOlistToy), formalism="ode", pdf=FALSE,
@@ -157,11 +153,9 @@ dev.off()
 #par(mfrow=c(1,1))
 
 #par(mfrow=c(1,2))
-pdf("bestTopology_PKN.pdf")
-plotModel(model, CNOlistToy, bString=ToyT1opt$bString)
+
 #bs = mapBack(model, pknmodel, ToyT1opt$bString)
 #plotModel(pknmodel, CNOlistToy, bs, compressed=model$speciesCompressed)
-dev.off()
 #par(mfrow=c(1,1))
 
 # Processed model (left) and original PKN (right)

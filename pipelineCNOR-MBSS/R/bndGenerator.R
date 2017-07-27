@@ -26,7 +26,6 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
     }
   }
 
-  # May be useless, CNOR doesn't allow models with 1 reaction
   else if (length(nameReac) == 1) {
     target <- str_split(model$reacID[1], "=", simplify = TRUE)[2]
     reg <- str_split(model$reacID[1], "=", simplify = TRUE)[1]
