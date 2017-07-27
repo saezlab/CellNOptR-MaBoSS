@@ -17,7 +17,8 @@
 #Function that computes the score of a specific bitstring
 # todo: this is similar to wha is done in gaBinaryT1. need to do the same for T2
 computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL, 
-                         sizeFac=0.0001, NAFac=1, timeIndex=2, title=NULL, scoreT0=TRUE, initState=TRUE){
+                         sizeFac=0.0001, NAFac=1, timeIndex=2, title=NULL,
+                         scoreT0=TRUE, initState=TRUE, multiTP=NULL){
   # simList and indexList are computed inside this function. 
   # However, for back-compatibility, we keep the arguments so that if
   # provided, we can still use them.
@@ -56,40 +57,24 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   
 
 
-  simDuration <- function(x, nameSimIndiv, CNOlist, model, timeMaxi){
-    simDuration <- mabossSimulation(x, nameSimIndiv, CNOlist, model, timeMaxi)
-    if (timeMaxi != simDuration) {
-      timeMaxi <- simDuration
-      
-      ### Remove the current simulation
-      nameFolder <- paste(nameSimIndiv,x,sep="_")
-      system(paste("rm -r ",nameFolder, "*", sep = ""))
-      for (afile in list.files(path = ".")){
-        if (str_detect(afile, nameFolder) == TRUE){
-          system(paste("rm -r ", afile, sep=""))
-        }
+  if (multiTP == TRUE) {
+    for (x in 1:lenTr) {
+      cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
+      system(paste("source ./MaBoSS.env ; perl ./tools/MBSS_FormatTable.pl ",nameSimIndiv,".bnd ",nameSimIndiv,"_",x,".cfg", sep=""))
+      timeMaxi <- NULL
+    }
+  } else {
+    for (x in 1:lenTr) {
+      if (exists("timeMaxi") == FALSE) {
+        timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
+        print(timeMaxi)
+      } else {
+        timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv, timeMaxi)
       }
-      
-      ### Recursive step
-      cfgGenerator(CNOlist, model, x, nameSimIndiv, timeMaxi, initState)
-      simDuration(x, nameSimIndiv, CNOlist, model, timeMaxi)
-    } else {
-      return(timeMaxi)
+      timeMaxi <- simDuration(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)
     }
   }
-  
-  
-  
-  for (x in 1:lenTr) {
-    if (exists("timeMaxi") == FALSE) {
-      timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
-      print(timeMaxi)
-    } else {
-      timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv, timeMaxi)
-    }
-    timeMaxi <- simDuration(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)
-  }
-  
+ 
   
   #nCores <- (detectCores(all.tests = FALSE, logical = TRUE))
   #print(nCores)
@@ -104,19 +89,20 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   #############################  #############################  #############################  #############################
   
   
-  #print(nameSimIndiv)
-  if (scoreT0){
-    #print("for time 0")
-    mbssResultsT0 <- mbssResults(CNOlist, modelCut, nameSimIndiv, mode=0)
-    #print(mbssResultsT0)
-  } else { ### the score will be computed without the 1st time point
-    mbssResultsT0 <- NULL
-  }
+  print(nameSimIndiv)
+  #if (scoreT0){
+  #  print("for time 0")
+  #  mbssResultsT0 <- mbssResults(CNOlist, modelCut, mode=0)
+  #  print(mbssResultsT0)
+  #} else { ### the score will be computed without the 1st time point
+  #  mbssResultsT0 <- NULL
+  #}
   #print("for time 5")
   #mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0.5)
   #print("for time 10")
-  mbssResults <- mbssResults(CNOlist, modelCut, nameSimIndiv, mode=1)
-  print(mbssResults)
+  mbssResults <- mbssResults(CNOlist, modelCut, nameSim=nameSimIndiv, multiTP=multiTP, timeMaxi=timeMaxi)
+  #print("results of MBSS simulations")
+  #print(mbssResults)
   
   removal <- paste("rm -r ",nameSimIndiv,"*", sep = "")
   system(removal)
@@ -182,21 +168,34 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   #simResults = simResults[, indexList$signals]
   #nInTot = length(which(model$interMat == -1))
   
-  #print(simResults)
+  #print(mbssResults)
   
   #print("Ready to compute the Score")
   #Compute the score
-  Score <- getFit(
-    simResults=mbssResults,
-    CNOlist=CNOlist,
-    model=modelCut,
-    indexList=indexList,
-    timePoint=timeIndex,
-    sizeFac=sizeFac,
-    NAFac=NAFac,
-    nInTot=length(which(model$interMat == -1)),
-    simResultsT0=mbssResultsT0)
-  
+  if (multiTP == TRUE) {
+    Score <- getFit_multiTimePoints(
+      simResults=mbssResults,
+      CNOlist=CNOlist,
+      model=modelCut,
+      #indexList=indexList,
+      timePoint=timeIndex,
+      sizeFac=sizeFac,
+      NAFac=NAFac,
+      nInTot=length(which(model$interMat == -1)),
+      simResultsT0=NULL)
+  } else {
+    Score <- getFit(
+      simResults=mbssResults,
+      CNOlist=CNOlist,
+      model=modelCut,
+      #indexList=indexList,
+      timePoint=timeIndex,
+      sizeFac=sizeFac,
+      NAFac=NAFac,
+      nInTot=length(which(model$interMat == -1)),
+      simResultsT0=NULL)
+  }
+    
   
   if ((class(CNOlist)=="CNOlist")==FALSE){
     CNOlist = CellNOptR::CNOlist(CNOlist)

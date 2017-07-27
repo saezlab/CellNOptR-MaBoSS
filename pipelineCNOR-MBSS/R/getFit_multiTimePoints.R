@@ -13,12 +13,12 @@
 #
 ##############################################################################
 # $Id: getFit.R 3355 2013-03-04 17:19:06Z cokelaer $
-getFit<-function(
+getFit_multiTimePoints<-function(
     simResults,
     CNOlist,
     model,
-    indexList=NULL,
-    timePoint=c("t1","t2"),
+ #   indexList=NULL,
+    timePoint=NULL,
     sizeFac=0.0001,
     NAFac=1,
     nInTot,
@@ -29,60 +29,72 @@ getFit<-function(
          CNOlist = CellNOptR::CNOlist(CNOlist)
      }
 
-    if (is.null(indexList)==FALSE){
-        simResults<-simResults[,indexList$signals]
-        if (is.null(simResultsT0)==FALSE){
-            simResultsT0<-simResultsT0[,indexList$signals]
-        }
-    }
+ #   if (is.null(indexList)==FALSE){
+ #       simResults<-simResults[,indexList$signals]
+ #       if (is.null(simResultsT0)==FALSE){
+ #           simResultsT0<-simResultsT0[,indexList$signals]
+ #       }
+ #   }
 
+    timePoints <- CNOlist@timepoints
 
     # for back compatibility, timePoint ca be "t1" or "t2" but developers should
     # use an integer.
-    if(timePoint == "t1"){
-        tPt<-2
-    }
-    else{
-        if(timePoint == "t2"){
-            tPt<-3
-        }
-        else{
-            tPt<-timePoint
-        }
-    }
+#    if(timePoint == "t1"){
+#        tPt<-2
+#    }
+#    else{
+#        if(timePoint == "t2"){
+#            tPt<-3
+#        }
+#        else{
+#            tPt<-timePoint
+#        }
+#    }
+    
     #print(simResults)
     #print(CNOlist@signals[[tPt]])
   
     # if t0 is provided and we are interested in t1
     # then  score is based on t1 but also t0
-    if (tPt == 2 ) {#&& is.null(simResultsT0)==FALSE){
-
-        print("Time 0")
+#    if (tPt == 2 && is.null(simResultsT0)==FALSE){
+#        Diff0 <- simResultsT0 - CNOlist@signals[[1]]
+#        Diff <- simResults - CNOlist@signals[[tPt]]
+#        r0 <- Diff0^2
+#        r <- Diff^2
+#        r <- rbind(r0, r) # we can concatenate because it's matricial computation.
+#        deviationPen<-sum(r[!is.na(r)])/2
+#    }# otherwise, no need to take to into account
+#    else{
+#        Diff<-simResults-CNOlist@signals[[tPt]]
+#        r<-Diff^2
+#        deviationPen<-sum(r[!is.na(r)])
+#    }
+    
+    #r <- matrix(NA, ncol = length(colnames(CNOlist@signals[[0]])))
+    for (aTime in timePoints) {
+    	tPt <- match(aTime,timePoints)
+        print(aTime)
         print("print the simulation of mbss")
-        print(simResults[[1]])
-        print("print the data")
-        print(CNOlist@signals[[1]])
-        print("Time maxi")
-        print("print the simulation of mbss")
-        print(simResults[[2]])
+        print(simResults[[as.character(aTime)]])
+        #print(tPt)
         print("print the data")
         print(CNOlist@signals[[tPt]])
 
-
-        Diff0 <- simResults[[1]] - CNOlist@signals[[1]]
-        Diff <- simResults[[2]] - CNOlist@signals[[tPt]]
-        r0 <- Diff0^2
-        r <- Diff^2
-        r <- rbind(r0, r) # we can concatenate because it's matricial computation.
-        deviationPen<-sum(r[!is.na(r)])/2
-    }# otherwise, no need to take to into account
-    else{
-        Diff<-simResults[[2]]-CNOlist@signals[[tPt]]
-        r<-Diff^2
-        deviationPen<-sum(r[!is.na(r)])
+     	Diff <- simResults[[as.character(aTime)]] - CNOlist@signals[[tPt]]
+    	sqrd <- Diff^2
+    	if (aTime == 0) {
+    		r <- sqrd
+    	} else {
+    		r <- rbind(r, sqrd)
+    	}
     }
-    
-    print(deviationPen)
+    #print(r)
+    deviationPen <- sum(r[!is.na(r)])/(length(timePoints))
+
+
+
+
     NAPen<-NAFac*length(which(is.na(simResults)))
 
     nDataPts<-dim(CNOlist@signals[[tPt]])[1]*dim(CNOlist@signals[[tPt]])[2]

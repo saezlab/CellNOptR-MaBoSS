@@ -1,4 +1,4 @@
-mbssResults <- function(CNOlist, model, nameSim=NULL, mode=1){
+mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NULL){
   mbssSim <- list()
   # recuperation of 2 lines in the simulation
   # - at time 0
@@ -7,64 +7,123 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, mode=1){
 
   nCues <- dim(CNOlist@cues)[1]
 
+  if (multiTP == TRUE) {
+    timePoints <- CNOlist@timepoints  
+  } else {
+    timePoints <- c(1,2)
+  }
+
   for (i in 1:nCues){
     #readMaboss <- function(x) {
     mbssSimulation <- read.table(paste(nameSim, "_", i, "/", nameSim, "_", i, "_probtraj_table.csv", sep = ""), header = TRUE)
-    
-    cueRow <- paste(as.character(as.numeric(CNOlistToy@cues[i,])), collapse = "")
-    if (mode == 0) {
-      
-      mbssSim[[cueRow]] <- mbssSimulation[which(mbssSimulation$Time==0),]
-      
-    } else {
-      
-      mbssSim[[cueRow]] <- mbssSimulation[dim(mbssSimulation)[1],]
-    
+    #print(colnames(mbssSimulation))
+
+    #### index of the columns of interest
+    colProb <- c()
+    for (aColName in colnames(mbssSimulation)) {
+      #print(aColName)
+      if ((str_detect(aColName,"^Prob")==TRUE) || (str_detect(aColName, "^Time")==TRUE)) {
+        colProb <- append(colProb, which(colnames(mbssSimulation) == aColName,arr.ind=TRUE))
+      }
     }
+
+    #### Selection of the lines
+    cueRow <- paste(as.character(as.numeric(CNOlist@cues[i,])), collapse = "")
+    mbssSim[[cueRow]] = list()
+    if (multiTP == TRUE) {
+      for (aTP in timePoints) {
+        mbssSim[[cueRow]][[as.character(aTP)]] <- mbssSimulation[which(mbssSimulation$Time==aTP),colProb]
+
+        for (aColName in colnames(mbssSim[[cueRow]][[as.character(aTP)]])) {
+          if (str_detect(aColName, "^Prob") == TRUE) {
+            colnames(mbssSim[[cueRow]][[as.character(aTP)]]) [which(aColName == colnames(mbssSim[[cueRow]][[as.character(aTP)]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
+          }
+        }
+      }
+    } else {
+      mbssSim[[cueRow]][["1"]] <- mbssSimulation[which(mbssSimulation$Time == 0),colProb]
+
+      for (aColName in colnames(mbssSim[[cueRow]][["1"]])) {
+        if (str_detect(aColName, "^Prob") == TRUE) {
+          colnames(mbssSim[[cueRow]][["1"]]) [which(aColName == colnames(mbssSim[[cueRow]][["1"]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
+        }
+      }
+
+      print(which(mbssSimulation$Time == max(mbssSimulation$Time)))
+      mbssSim[[cueRow]][["2"]] <- mbssSimulation[which(mbssSimulation$Time == max(mbssSimulation$Time)),colProb]
+      for (aColName in colnames(mbssSim[[cueRow]][["2"]])) {
+        if (str_detect(aColName, "^Prob") == TRUE) {
+          colnames(mbssSim[[cueRow]][["2"]]) [which(aColName == colnames(mbssSim[[cueRow]][["2"]]), arr.ind=TRUE)] <- str_replace(aColName,"^Prob", "")
+        }
+      }
+    }
+    #print(mbssSim[[cueRow]])
   }
-  
-  
+
+
   ################################
   indexRO <- list()
-  
-  for (aReadOut in model$namesSpecies){
+  for (aReadOut in colnames(CNOlist@signals$`0`)) {
     indexRO[[aReadOut]] <- list()
-    
+    #print(aReadOut)
     for (i in 1:nCues){
-      aCue <- paste(as.character(as.numeric(CNOlistToy@cues[i,])), collapse = "")
-      
-      for (aTransState in names(mbssSim[[aCue]])){
-        
-        if ((str_detect(aTransState, aReadOut)==TRUE) && (str_detect(aTransState,"^Prob")==TRUE)){
-          indexRO[[aReadOut]][[aCue]] <- c(indexRO[[aReadOut]][[aCue]], which(names(mbssSim[[aCue]])==aTransState))
+      aCue <- paste(as.character(as.numeric(CNOlist@cues[i,])), collapse = "")
+      indexRO[[aReadOut]][[aCue]] <- c()
+      for (aTransState in names(mbssSim[[aCue]][[1]])){
+        if((str_detect(aTransState, aReadOut)==TRUE) && (str_detect(aTransState,"^Time") == FALSE)) {
+          #print(aTransState)
+          indexRO[[aReadOut]][[aCue]] <- c(indexRO[[aReadOut]][[aCue]], which(names(mbssSim[[aCue]][[1]])==aTransState))
         }
       }
     }
   }
+  #print(indexRO)
   #############################
   
-  mbssMatrix <- matrix(data = 1:(length(model$namesSpecies)*nCues),
+  mbssMatrix <- list()
+  for (aTP in timePoints) {
+    tp <- as.character(aTP)
+  	mbssMatrix[[tp]] <- matrix(data = seq(1:(length(colnames(CNOlistToy@signals$`0`))*nCues))+1,
                           nrow = nCues,
-                          ncol = length(model$namesSpecies),
-                          dimnames = list(names(mbssSim),model$namesSpecies)
-                       )
-  
-  #############################
-  addProbabilities <- function(x){
-    mtxIndex <- which(mbssMatrix==x, arr.ind = TRUE)
-    cueName <- rownames(mbssMatrix)[mtxIndex[1]]
-    rdtoutName <- colnames(mbssMatrix)[mtxIndex[2]]
-    rdtoutIndices <- indexRO[[rdtoutName]][[cueName]]
-    
-    if (length(rdtoutIndices) != 0){
-      rdtvalues <- mbssSim[[cueName]][rdtoutIndices]
-      x <- sum(rdtvalues)
-    } else {
-      x <- 0
-    }
+                          ncol = length(colnames(CNOlistToy@signals$`0`)),
+                          dimnames = list(names(mbssSim),colnames(CNOlistToy@signals$`0`))
+    )
   }
   
-  mbssMatrix <- apply(mbssMatrix, c(1,2), addProbabilities)
+  #############################
+  addProbabilities <- function(x, mat=NULL, tp=NULL){
+    #print(paste(x, tp, sep="    "))
+    mtxIndex <- which(mat==x, arr.ind = TRUE)
+    #print(mtxIndex)
+    cueName <- rownames(mat)[mtxIndex[1]]
+    #print(cueName)
+    rdtoutName <- colnames(mat)[mtxIndex[2]]
+    #print(rdtoutName)
+    rdtoutIndices <- indexRO[[rdtoutName]][[cueName]]
+    #print(rdtoutIndices)
+    
+
+    if (length(rdtoutIndices) != 0){
+      mat[cueName,rdtoutName] <- sum(mbssSim[[cueName]][[tp]][rdtoutIndices])
+    } else {
+      mat[cueName,rdtoutName] <- 0
+    }
+    #print(mat[cueName,rdtoutName])
+  }
+
+
+  for (aTP in timePoints) {
+    tp <- as.character(aTP)
+    #print(is.matrix(mbssMatrix[[tp]]))
+    #print(dim(mbssMatrix[[tp]]))
+    #print(rownames(mbssMatrix[[tp]]))
+    #print(colnames(mbssMatrix[[tp]]))
+    print(tp)
+    #print(mbssMatrix[[tp]])
+    mbssMatrix[[tp]] <- apply(mbssMatrix[[tp]], c(1,2), addProbabilities, mat=mbssMatrix[[tp]], tp=tp)
+    print(mbssMatrix[[tp]])
+    #print("test lalala")
+  }
   ############################
   
   
@@ -84,6 +143,7 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, mode=1){
   # detection of prob and name of a species
   # addition of the values
   # /!\ maybe a problem with the NAs
+  #print(mbssMatrix)
   return(mbssMatrix)
 }
 
