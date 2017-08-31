@@ -17,7 +17,7 @@ library(stringr)
 #getDoParWorkers()
 
 #system("mkdir probPlots")
-#system("mkdir allCond")
+system("mkdir allCond")
 
 ###### Working with arguments
 #args <- commandArgs(trailingOnly = TRUE)
@@ -38,7 +38,7 @@ library(stringr)
 # there is also a list of treatments that does not appear by the simple
 # command "> CNOlistToy"
 
-workingModel = 1
+workingModel = 3
 
 if (workingModel == 1){ ## 6 time points
 	CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPBode.csv");
@@ -48,6 +48,7 @@ if (workingModel == 1){ ## 6 time points
 } else if (workingModel == 2) { ## 6 time points, only 2 nodes
 	CNOlistToy=CNOlist("/Users/celine/model2nodes/model2nodes.csv");
 	model=readSIF("/Users/celine/model2nodes/model2nodes.sif");
+	multiTP <- TRUE
 
 } else if (workingModel == 3) { ## 2 time points, for steady state
 	CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB2.csv");
@@ -65,7 +66,7 @@ if (workingModel == 1){ ## 6 time points
 
 
 #plot(CNOlistToy)
-#plotModel(pknmodel, CNOlistToy)
+#plotModel(model, CNOlistToy, graphvizParams = list(fontsize=42, nodeWidth=3))
 
 
 ###############################
@@ -78,11 +79,11 @@ if (workingModel == 1){ ## 6 time points
 # command line
 model <- preprocessing(CNOlistToy, model, expansion=FALSE, compression=TRUE, cutNONC=TRUE, verbose=FALSE)
 #checkSignals(CNOlistToy,model) # also checked in gaBinaryT1() function
-#plotModel(model, CNOlistToy)
+#plotModel(model, CNOlistToy, graphvizParams = list(fontsize=42, nodeWidth=3))
 
 
 #############################
-##  Training of the model  ##
+##  Training of the model  ##x
 #############################
 
 # creation of a vector as long as the number of influences in the model
@@ -97,7 +98,7 @@ initBstring<-rep(1,length(model$reacID))
 #for (x in seq(1:15)) {
   startRun <- proc.time()
   ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=100,elitism=5,#sizeFac=0,
-                       verbose=TRUE, scoreT0=TRUE, initState=TRUE, multiTP=multiTP)#, nameSim=nameSim)
+                       verbose=TRUE, scoreT0=TRUE, initState=TRUE, multiTP=multiTP, ttime=startRun)#, nameSim=nameSim)
   timeExec <- proc.time()-startRun
 #  timeHist <- append(timeHist, timeExec[1])
 #  scoreHist <- append(scoreHist,ToyT1opt$bScore)
@@ -117,7 +118,7 @@ ToyT1opt
 # returned values
 
 pdf("bestTopology_PKN.pdf")
-plotModel(model, CNOlistToy, bString=ToyT1opt$bString)
+plotModel(model, CNOlistToy, bString=ToyT1opt$bString, graphvizParams = list(fontsize=46, nodeWidth=3))
 dev.off()
 
 bs <- ToyT1opt$bString

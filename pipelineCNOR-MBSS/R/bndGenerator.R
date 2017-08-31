@@ -111,7 +111,7 @@ bndGenerator <- function(CNOlist, model, nameSim=NULL){
       bRule = FALSE # == indicates if the node is regulated by another or not
       firstReg = TRUE
       for (reac in nameReac){
-        if (model$interMat[spec,reac][1] == 1){
+        if (model$interMat[target,reac][1] == 1){
           bRule = TRUE
 
           # ====== The node is regulated and requires a Boolean rule ====== #

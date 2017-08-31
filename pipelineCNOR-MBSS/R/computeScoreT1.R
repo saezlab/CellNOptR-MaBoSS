@@ -55,6 +55,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
 
   # ====== Writing of the .bnd file ====== #
   bndGenerator(CNOlist, modelCut, nameSimIndiv)
+  print("bnd ecrit")
 
   # ====== Test to decide if wether does a time course study or steady state study ====== #
   # == Write .cfg files one after the other and runs the MaBoSS simulation == #
