@@ -52,9 +52,7 @@ getFit_multiTimePoints<-function(
 #        }
 #    }
     
-    #print(simResults)
-    #print(CNOlist@signals[[tPt]])
-  
+ 
     # if t0 is provided and we are interested in t1
     # then  score is based on t1 but also t0
 #    if (tPt == 2 && is.null(simResultsT0)==FALSE){
@@ -71,16 +69,10 @@ getFit_multiTimePoints<-function(
 #        deviationPen<-sum(r[!is.na(r)])
 #    }
     
-    #r <- matrix(NA, ncol = length(colnames(CNOlist@signals[[0]])))
+
+    # ====== Calculate the SSE ====== #
     for (aTime in timePoints) {
     	tPt <- match(aTime,timePoints)
-        print(aTime)
-        print("print the simulation of mbss")
-        print(simResults[[as.character(aTime)]])
-        #print(tPt)
-        print("print the data")
-        print(CNOlist@signals[[tPt]])
-
      	Diff <- simResults[[as.character(aTime)]] - CNOlist@signals[[tPt]]
     	sqrd <- Diff^2
     	if (aTime == 0) {
@@ -89,16 +81,11 @@ getFit_multiTimePoints<-function(
     		r <- rbind(r, sqrd)
     	}
     }
-    #print(r)
+
+    # ====== Penalties ====== #
     deviationPen <- sum(r[!is.na(r)])/(length(timePoints))
-
-
-
-
     NAPen<-NAFac*length(which(is.na(simResults)))
-
     nDataPts<-dim(CNOlist@signals[[tPt]])[1]*dim(CNOlist@signals[[tPt]])[2]
-
     nInputs<-length(which(model$interMat == -1))
 
     # nInTot: number of inputs of expanded model

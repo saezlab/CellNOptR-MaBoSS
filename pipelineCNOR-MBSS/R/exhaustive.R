@@ -22,7 +22,8 @@ exhaustive<-function(
     sizeFac = 0.0001,
     NAFac = 1,
     relTol=0.1,
-    timeIndex=2){
+    timeIndex=2,
+    multiTP=NULL){
 
     if ((class(CNOlist)=="CNOlist")==FALSE){
         CNOlist = CellNOptR::CNOlist(CNOlist)
@@ -78,7 +79,7 @@ exhaustive<-function(
         bitstring = as.double(bitstrings[x,])
         #if (sum(bitstring)==0){next}
         score = computeScoreT1(CNOlist, model, bitstring, simList, indexList,
-			sizeFac, NAFac, timeIndex)
+			sizeFac, NAFac, timeIndex, multiTP=multiTP)
         all_scores[x] = score
         changed = FALSE
         if (score <= bestScore){

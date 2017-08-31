@@ -1,10 +1,13 @@
 mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NULL){
-  mbssSim <- list()
-  # recuperation of 2 lines in the simulation
-  # - at time 0
-  # - at the end of the simulation by default, will be improved
-  # later with the dynamique time warping algorithm
+  # ====== Extract the results of the simulations ====== #
+  # == and make it in the same format as the experimental values are stored == #
 
+
+  mbssSim <- list()
+
+  # ========================================================= #
+  # ====== recuperation of the lines in the simulation ====== #
+  # ========================================================= #
   nCues <- dim(CNOlist@cues)[1]
 
   if (multiTP == TRUE) {
@@ -13,12 +16,11 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NUL
     timePoints <- c(1,2)
   }
 
-  for (i in 1:nCues){
-    #readMaboss <- function(x) {
-    mbssSimulation <- read.table(paste(nameSim, "_", i, "/", nameSim, "_", i, "_probtraj_table.csv", sep = ""), header = TRUE)
-    #print(colnames(mbssSimulation))
 
-    #### index of the columns of interest
+  for (i in 1:nCues){
+    mbssSimulation <- read.table(paste(nameSim, "_", i, "/", nameSim, "_", i, "_probtraj_table.csv", sep = ""), header = TRUE)
+
+    # ====== Keep the columns of interest ====== #
     colProb <- c()
     for (aColName in colnames(mbssSimulation)) {
       #print(aColName)
@@ -27,7 +29,7 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NUL
       }
     }
 
-    #### Selection of the lines
+    # ====== Selection of the lines ====== #
     cueRow <- paste(as.character(as.numeric(CNOlist@cues[i,])), collapse = "")
     mbssSim[[cueRow]] = list()
     if (multiTP == TRUE) {
@@ -57,11 +59,12 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NUL
         }
       }
     }
-    #print(mbssSim[[cueRow]])
   }
 
 
-  ################################
+  # ============================================== #
+  # ====== Index of the columns of interest ====== #
+  # ============================================== #
   indexRO <- list()
   for (aReadOut in colnames(CNOlist@signals$`0`)) {
     indexRO[[aReadOut]] <- list()
@@ -77,9 +80,10 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NUL
       }
     }
   }
-  #print(indexRO)
-  #############################
+  # ============================================== #
   
+
+  # ====== Create the matrix where the simulated values will be stored ====== #
   mbssMatrix <- list()
   for (aTP in timePoints) {
     tp <- as.character(aTP)
@@ -90,60 +94,26 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NUL
     )
   }
   
-  #############################
+  # ====== Calculates the probability of each node to be activated ====== #
   addProbabilities <- function(x, mat=NULL, tp=NULL){
-    #print(paste(x, tp, sep="    "))
     mtxIndex <- which(mat==x, arr.ind = TRUE)
-    #print(mtxIndex)
     cueName <- rownames(mat)[mtxIndex[1]]
-    #print(cueName)
     rdtoutName <- colnames(mat)[mtxIndex[2]]
-    #print(rdtoutName)
     rdtoutIndices <- indexRO[[rdtoutName]][[cueName]]
-    #print(rdtoutIndices)
     
-
     if (length(rdtoutIndices) != 0){
       mat[cueName,rdtoutName] <- sum(mbssSim[[cueName]][[tp]][rdtoutIndices])
     } else {
       mat[cueName,rdtoutName] <- 0
     }
-    #print(mat[cueName,rdtoutName])
   }
 
 
   for (aTP in timePoints) {
     tp <- as.character(aTP)
-    #print(is.matrix(mbssMatrix[[tp]]))
-    #print(dim(mbssMatrix[[tp]]))
-    #print(rownames(mbssMatrix[[tp]]))
-    #print(colnames(mbssMatrix[[tp]]))
-    print(tp)
-    #print(mbssMatrix[[tp]])
     mbssMatrix[[tp]] <- apply(mbssMatrix[[tp]], c(1,2), addProbabilities, mat=mbssMatrix[[tp]], tp=tp)
-    print(mbssMatrix[[tp]])
-    #print("test lalala")
   }
-  ############################
   
-  
-  
-  # for loop in namesSpecies
-  #for (aCue in names(mbssSim)) {
-  #  for (aName in model$namesSpecies) {
-  #    simValue <- 0
-  #    for  (aTitle in colnames(mbssSim[[aCue]])){
-  #      if ((str_detect(aTitle, "^Prob") == TRUE) & (str_detect(aTitle, aName) == TRUE)){
-  #        simValue <- simValue + mbssSim[[aCue]][,aTitle]
-  #      }
-  #    }
-  #    mbssMatrix[aCue,aName] <- simValue
-  #  }
-  #}
-  # detection of prob and name of a species
-  # addition of the values
-  # /!\ maybe a problem with the NAs
-  #print(mbssMatrix)
   return(mbssMatrix)
 }
 

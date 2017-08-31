@@ -32,7 +32,8 @@ gaBinaryT1<-function(
   timeIndex=2,
   scoreT0=TRUE,
   initState=TRUE,
-  multiTP=NULL){
+  multiTP=NULL,
+  ttime = NULL){
   
   nameGen <- 0
   
@@ -52,7 +53,6 @@ gaBinaryT1<-function(
       multiTP = FALSE
     }
   }
-  print(multiTP)
 
   checkSignals(CNOlist, model)
   
@@ -95,6 +95,7 @@ gaBinaryT1<-function(
   scores2Hash = hash()
   
   #Function that produces the score for a specific bitstring
+  # ======== Remove the variable scores2Hash to implement the parallelisation ======= #
   getObj<-function(x, title=NULL){
     key = toString(.int2dec(x))
     if (has.key(key, scores2Hash)==TRUE){
@@ -102,9 +103,9 @@ gaBinaryT1<-function(
     } else {
       Score = computeScoreT1(CNOlist, model, x, simList, indexList,
                              sizeFac, NAFac, timeIndex, title, scoreT0, initState, multiTP=multiTP)
-      #if (length(scores2Hash)<1000){
+      if (length(scores2Hash)<1000){
         scores2Hash[[key]] =  Score
-      #}
+      }
     }
     
     return(Score)
@@ -121,7 +122,7 @@ gaBinaryT1<-function(
     # better to perform an exhaustive search
     stop = TRUE # stop criteria of the GA that need not to be run
     res = exhaustive(CNOlist, model, relTol=relTol, 
-                     sizeFac=sizeFac, NAFac=NAFac, verbose=verbose)
+                     sizeFac=sizeFac, NAFac=NAFac, verbose=verbose,multiTP=multiTP)
     
     return(res)
   }
@@ -147,12 +148,9 @@ gaBinaryT1<-function(
   while(!stop){
     
     nameGen <- g+1
-    #popDoubled <- Pop[duplicated(Pop),]
-    #if (length(popDoubled) == 0) {
-    #  print("No double individuals")
-    #} else {
-    #  print(popDoubled)
-    #}
+
+    # ======= 2 tries to implement the parallelisation ======= #
+    # == might need to include parameters == #
     
     #popList <- split(Pop, 1:nrow(Pop))
     #ID = 1:length(popList)
@@ -172,12 +170,10 @@ gaBinaryT1<-function(
     #                   },
     #                   mc.cores=detectCores(all.tests = FALSE, logical = FALSE))
     
-    #print(scores)
     #scores = unlist(lapply(scores,function(x)x[[1]]))
     #IDs = unlist(lapply(scores,function(x)x[[2]]))
     
     #scores <- unlist(scores)
-    #print(scores)
     
     #compute the scores
     #l1 = length(scores2Hash)
@@ -185,9 +181,16 @@ gaBinaryT1<-function(
     #l2 = length(scores2Hash)
     #if (verbose == TRUE){print(paste("new scores:", l2-l1))}
     
+
+
+
+    print(proc.time()-ttime)  
     
     
-    
+
+
+
+
     #Fitness assignment: ranking, linear
     rankP<-order(scores,decreasing=TRUE)
     Pop<-Pop[rankP,]

@@ -1,6 +1,7 @@
 mabossSimulation <- function(x, nameSimIndiv, CNOlist, modelCut, timeMaxi) {
+  # ====== Run the simulation with MaBoSS and test the steady state statment ====== #
+
   system(paste("source ./MaBoSS.env ; perl ./tools/MBSS_FormatTable.pl ",nameSimIndiv,".bnd ",nameSimIndiv,"_",x,".cfg", sep=""))
-  #system(paste("perl ./tools/MBSS_TrajectoryFig.py ",nameSimIndiv,"_",x, sep = ""))
   
   timeMaxi <- testOnSteadyState(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)
   

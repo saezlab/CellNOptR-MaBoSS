@@ -51,59 +51,37 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   lenTr <- dim(CNOlist@cues)[1]
   #timeMaxi <- max(CNOlist@timepoints)
   
+
+
+  # ====== Writing of the .bnd file ====== #
   bndGenerator(CNOlist, modelCut, nameSimIndiv)
-  #lapply(1:lenTr, function(x) {cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
-  #                             mabossSimulation(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)})
-  
 
-
-  if (multiTP == TRUE) {
+  # ====== Test to decide if wether does a time course study or steady state study ====== #
+  # == Write .cfg files one after the other and runs the MaBoSS simulation == #
+  if (multiTP == TRUE) { 
     for (x in 1:lenTr) {
       cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
       system(paste("source ./MaBoSS.env ; perl ./tools/MBSS_FormatTable.pl ",nameSimIndiv,".bnd ",nameSimIndiv,"_",x,".cfg", sep=""))
       timeMaxi <- NULL
     }
   } else {
+    # == Find the time of the MaBoSS simulation to get the SS through simDuration.R == #
     for (x in 1:lenTr) {
       if (exists("timeMaxi") == FALSE) {
         timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv)
-        print(timeMaxi)
       } else {
         timeMaxi <- cfgGenerator(CNOlist, modelCut, x, nameSimIndiv, timeMaxi)
       }
       timeMaxi <- simDuration(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)
     }
   }
- 
   
-  #nCores <- (detectCores(all.tests = FALSE, logical = TRUE))
-  #print(nCores)
-  #lapply(1:lenTr, function(x) {mabossSimulation(x, nameSimIndiv, CNOlist, modelCut, timeMaxi)}) #, mc.cores = detectCores(all.tests = FALSE, logical = FALSE))
-  #mclapply(1:lenTr, function(x) {mabossSimulation(x, nameSimIndiv, CNOlist, modelCut, lenTr, timeMaxi)}, mc.cores = detectCores(all.tests = FALSE, logical = FALSE))
-  
-  #############################  #############################  #############################  #############################
-  ### test on steady state reachness
-  
-  #testOnSteadyState(nameSimIndiv, CNOlist, modelCut, lenTr, timeMaxi)
-  
-  #############################  #############################  #############################  #############################
-  
-  
-  print(nameSimIndiv)
-  #if (scoreT0){
-  #  print("for time 0")
-  #  mbssResultsT0 <- mbssResults(CNOlist, modelCut, mode=0)
-  #  print(mbssResultsT0)
-  #} else { ### the score will be computed without the 1st time point
-  #  mbssResultsT0 <- NULL
-  #}
-  #print("for time 5")
-  #mbssResultsT0 <- mbssResults(CNOlist, modelCut, lenTr, nameSimIndiv, mode=0.5)
-  #print("for time 10")
+
+  # ====== Extract the simulated values and store them in the good format to get the score ===== #
   mbssResults <- mbssResults(CNOlist, modelCut, nameSim=nameSimIndiv, multiTP=multiTP, timeMaxi=timeMaxi)
-  #print("results of MBSS simulations")
-  #print(mbssResults)
-  
+
+
+  # ====== Remove the .bnd and .cfg files ====== #
   removal <- paste("rm -r ",nameSimIndiv,"*", sep = "")
   system(removal)
   for (afile in list.files(path = ".")){
@@ -111,10 +89,9 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
       system(paste("rm -r ", afile, sep=""))
     }
   }
-  #print("individuals")
-  #setwd(dir = "/Users/celine/CNOR_analysis")
   
-  
+
+  # ====== Former code to run the simulation using the CellNOptR deterministic simulator ====== #
   #simListCut <- cutSimList(simList, bString)
   
   
@@ -168,10 +145,12 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   #simResults = simResults[, indexList$signals]
   #nInTot = length(which(model$interMat == -1))
   
-  #print(mbssResults)
+  # ====== END of the CellNOptR deterministic simulation ====== #
+
   
-  #print("Ready to compute the Score")
   #Compute the score
+  # == Necessary if there is a time course study, can also compute the score for 2 time points == #
+  # == without searching fo the steady state. This implementation is faster than the else part == #
   if (multiTP == TRUE) {
     Score <- getFit_multiTimePoints(
       simResults=mbssResults,
@@ -184,8 +163,10 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
       nInTot=length(which(model$interMat == -1)),
       simResultsT0=NULL)
   } else {
+    # == Compute the score when there is only 2 timepoints == #
     Score <- getFit(
       simResults=mbssResults,
+      #simResults=simResults, # == line from  CellNOptR == #
       CNOlist=CNOlist,
       model=modelCut,
       #indexList=indexList,
@@ -202,9 +183,6 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
   }
   nDataP <- sum(!is.na(CNOlist@signals[[timeIndex]]))
   Score <- Score/nDataP
-  
-  #print(paste("Number of no-NA data : ", nDataP, sep=""))
-  print(paste("Final score : ", Score, sep=""))
   
   return(Score)
 }
