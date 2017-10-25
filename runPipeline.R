@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 rm(list=c(ls()))
 
-
 #setwd(dir = "/Users/celine/MaBoSS-env-2.0")
 
 #source("https://bioconductor.org/biocLite.R")
@@ -9,6 +8,11 @@ rm(list=c(ls()))
 
 #library(CNORode2017)
 library(CellNOptR)
+
+file.sources = list.files("../CellNOptR-MaBoSS/pipelineCNOR-MBSS/R", 
+                          pattern="*.R$", full.names=TRUE, ignore.case=TRUE)
+sapply(file.sources,source,.GlobalEnv)
+
 library(stringr)
 #library(parallel)
 #library(doParallel)
@@ -51,8 +55,10 @@ if (workingModel == 1){ ## 6 time points
 	multiTP <- TRUE
 
 } else if (workingModel == 3) { ## 2 time points, for steady state
-	CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB2.csv");
-	model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
+  # CNOlistToy=CNOlist("/Users/celine/modelMacNamara2012/ToyModelPB2.csv");
+  # model=readSIF("/Users/celine/modelMacNamara2012/ToyModelPB_TRUE_plus.sif");
+  CNOlistToy=CNOlist("ToyDataMMB.csv");
+	model=readSIF("ToyPKNMMB.sif");
 	multiTP <- FALSE
 }
 
@@ -97,7 +103,7 @@ initBstring<-rep(1,length(model$reacID))
 #scoreHist = c()
 #for (x in seq(1:15)) {
   startRun <- proc.time()
-  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=100,elitism=5,#sizeFac=0,
+  ToyT1opt<-gaBinaryT1(CNOlist=CNOlistToy, model=model, initBstring=initBstring, popSize=10, maxGens=10,elitism=5,#sizeFac=0,
                        verbose=TRUE, scoreT0=TRUE, initState=TRUE, multiTP=multiTP, ttime=startRun)#, nameSim=nameSim)
   timeExec <- proc.time()-startRun
 #  timeHist <- append(timeHist, timeExec[1])
