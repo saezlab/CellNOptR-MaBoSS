@@ -30,7 +30,7 @@ export(
     "gaBinaryT2",
     "gaBinaryTN",
     "graph2sif",
-    "getFit",
+    "getFit_mbs",
     "indexFinder",
     "mapBack", 
     "makeCNOlist",
