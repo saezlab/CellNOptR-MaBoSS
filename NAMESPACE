@@ -1,6 +1,6 @@
 import("graph", "RBGL")
 
-useDynLib(CellNOptR-MaBoSS)
+useDynLib(CellNOptR)
 
 
 
