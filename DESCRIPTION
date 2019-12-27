@@ -1,8 +1,7 @@
-Package: CellNOptR-MaBoSS
 Type: Package
 Title: Training of boolean logic models of signalling networks using prior knowledge networks and perturbation data via an asynchronous update scheme. 
-Version: 1.21.0
-Date: 2014-03-13
+Version: 1.0.0
+Date: 2020-12-27
 Author: C.Chevalier, A.Dugourd, E.Gjerga
 Maintainer: T.Cokelaer <cokelaer@ebi.ac.uk>
 Depends: R (>= 2.15.0), RBGL, graph, methods, hash, ggplot2, RCurl, Rgraphviz, XML
