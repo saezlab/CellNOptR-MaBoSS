@@ -1,3 +1,19 @@
+#
+#  This file is part of the CNO software
+#
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
+#
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
+#
+#  Distributed under the GPLv3 License.
+#  See accompanying file LICENSE.txt or copy at
+#      http://www.gnu.org/licenses/gpl-3.0.html
+#
+#  CNO website: http://www.cellnopt.org
+#
+##############################################################################
+# $Id$
+
 cfgGenerator <- function (CNOlist, modelCut, treatmt, nameSim=NULL, timeMaxi=NULL, initState=TRUE){
   ### Write the cfg file
   ### Initial conditions depends on the treatment

@@ -14,7 +14,7 @@
 ##############################################################################
 # $Id$
 
-simulatorTN <-function(simResultsPrev, CNOlist, model, simList, indexList, timeIndex=3){
+simulatorTN_mbs <-function(simResultsPrev, CNOlist, model, simList, indexList, timeIndex=3){
     #timeIndex=3 correspond to T2
 
     if ((class(CNOlist)=="CNOlist")==FALSE){

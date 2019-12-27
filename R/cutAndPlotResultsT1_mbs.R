@@ -1,9 +1,9 @@
 #
 #  This file is part of the CNO software
 #
-#  Copyright (c) 2011-2012 - EMBL - European Bioinformatics Institute
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
 #
-#  File author(s): CNO developers (cno-dev@ebi.ac.uk)
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
 #
 #  Distributed under the GPLv3 License.
 #  See accompanying file LICENSE.txt or copy at
@@ -12,9 +12,9 @@
 #  CNO website: http://www.cellnopt.org
 #
 ##############################################################################
-# $Id: cutAndPlotResultsT1.R 4181 2013-11-28 11:04:35Z cokelaer $
+# $Id$
 
-cutAndPlotResultsT1 <- function(model, bString, simList=NULL, CNOlist, indexList=NULL,
+cutAndPlotResultsT1_mbs <- function(model, bString, simList=NULL, CNOlist, indexList=NULL,
  plotPDF=FALSE, tag=NULL, tPt=CNOlist@timepoints[2], plotParams=list(maxrow=10),  scoreT0=TRUE, initState=TRUE)
 {
 
@@ -37,11 +37,11 @@ cutAndPlotResultsT1 <- function(model, bString, simList=NULL, CNOlist, indexList
     modelCut <- cutModel(model, bString)
     simListCut <- cutSimList(simList, bString)
     # t0
-    Sim0 <- simulatorT0(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList, scoreT0=TRUE, initState=TRUE)
+    Sim0 <- simulatorT0_mbs(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList, scoreT0=TRUE, initState=TRUE)
     simRes0 <- as.matrix(Sim0[,indexList$signals,drop=F])
     #simRes0 = Sim0
     # t1
-    Sim <- simulatorT1(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList, scoreT0=TRUE, initState=TRUE)
+    Sim <- simulatorT1_mbs(CNOlist=CNOlist, model=modelCut, simList=simListCut, indexList=indexList, scoreT0=TRUE, initState=TRUE)
     simRes <- as.matrix(Sim[,indexList$signals,drop=F])
     #simRes = Sim
 

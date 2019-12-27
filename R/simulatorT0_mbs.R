@@ -1,9 +1,9 @@
 #
 #  This file is part of the CNO software
 #
-#  Copyright (c) 2011-2012 - EMBL - European Bioinformatics Institute
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
 #
-#  File author(s): CNO developers (cno-dev@ebi.ac.uk)
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
 #
 #  Distributed under the GPLv3 License.
 #  See accompanying file LICENSE.txt or copy at
@@ -13,7 +13,8 @@
 #
 ##############################################################################
 # $Id$
-simulatorT0<-function(CNOlist,model,simList,indexList,scoreT0=TRUE, initState=TRUE){
+
+simulatorT0_mbs<-function(CNOlist,model,simList,indexList,scoreT0=TRUE, initState=TRUE){
 
     if ((class(CNOlist)=="CNOlist")==FALSE){
         CNOlist = CellNOptR::CNOlist(CNOlist)

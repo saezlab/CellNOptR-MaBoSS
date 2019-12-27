@@ -13,7 +13,7 @@
 #
 ##############################################################################
 # $Id$
-simulatorT2 <-function(
+simulatorT2_mbs <-function(
     simResultsT1,
     CNOlist,
     model,

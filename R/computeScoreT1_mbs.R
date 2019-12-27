@@ -1,9 +1,9 @@
 #
 #  This file is part of the CNO software
 #
-#  Copyright (c) 2011-2012 - EMBL - European Bioinformatics Institute
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
 #
-#  File author(s): CNO developers (cno-dev@ebi.ac.uk)
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
 #
 #  Distributed under the GPLv3 License.
 #  See accompanying file LICENSE.txt or copy at
@@ -16,9 +16,9 @@
 
 #Function that computes the score of a specific bitstring
 # todo: this is similar to wha is done in gaBinaryT1. need to do the same for T2
-computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL, 
-                         sizeFac=0.0001, NAFac=1, timeIndex=2, title=NULL,
-                         scoreT0=TRUE, initState=TRUE, multiTP=NULL){
+computeScoreT1_mbs<-function(CNOlist, model, bString, simList=NULL, indexList=NULL, 
+                             sizeFac=0.0001, NAFac=1, timeIndex=2, title=NULL,
+                             scoreT0=TRUE, initState=TRUE, multiTP=NULL){
   # simList and indexList are computed inside this function. 
   # However, for back-compatibility, we keep the arguments so that if
   # provided, we can still use them.
@@ -165,7 +165,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
       simResultsT0=NULL)
   } else {
     # == Compute the score when there is only 2 timepoints == #
-    Score <- getFit(
+    Score <- getFit_mbs(
       simResults=mbssResults,
       #simResults=simResults, # == line from  CellNOptR == #
       CNOlist=CNOlist,

@@ -1,9 +1,9 @@
 #
 #  This file is part of the CNO software
 #
-#  Copyright (c) 2011-2012 - EMBL - European Bioinformatics Institute
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
 #
-#  File author(s): CNO developers (cno-dev@ebi.ac.uk)
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
 #
 #  Distributed under the GPLv3 License.
 #  See accompanying file LICENSE.txt or copy at
@@ -12,8 +12,9 @@
 #  CNO website: http://www.cellnopt.org
 #
 ##############################################################################
-# $Id: gaBinaryT1.R 4106 2013-11-06 15:53:49Z cokelaer $
-gaBinaryT1<-function(
+# $Id$
+
+gaBinaryT1_mbs<-function(
   CNOlist,
   model,
   initBstring=NULL,
@@ -101,7 +102,7 @@ gaBinaryT1<-function(
     if (has.key(key, scores2Hash)==TRUE){
       return(scores2Hash[[key]])
     } else {
-      Score = computeScoreT1(CNOlist, model, x, simList, indexList,
+      Score = computeScoreT1_mbs(CNOlist, model, x, simList, indexList,
                              sizeFac, NAFac, timeIndex, title, scoreT0, initState, multiTP=multiTP)
       if (length(scores2Hash)<1000){
         scores2Hash[[key]] =  Score

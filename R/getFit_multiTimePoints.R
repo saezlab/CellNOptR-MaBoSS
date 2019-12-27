@@ -1,9 +1,9 @@
 #
 #  This file is part of the CNO software
 #
-#  Copyright (c) 2011-2012 - EMBL - European Bioinformatics Institute
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
 #
-#  File author(s): CNO developers (cno-dev@ebi.ac.uk)
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
 #
 #  Distributed under the GPLv3 License.
 #  See accompanying file LICENSE.txt or copy at
@@ -12,7 +12,8 @@
 #  CNO website: http://www.cellnopt.org
 #
 ##############################################################################
-# $Id: getFit.R 3355 2013-03-04 17:19:06Z cokelaer $
+# $Id$
+
 getFit_multiTimePoints<-function(
     simResults,
     CNOlist,

@@ -1,3 +1,19 @@
+#
+#  This file is part of the CNO software
+#
+#  Copyright (c) 2020 - BioQuant Zentrum - Heidelberg University
+#
+#  File author(s): C. Chevalier, A. Dugourd, E. Gjerga
+#
+#  Distributed under the GPLv3 License.
+#  See accompanying file LICENSE.txt or copy at
+#      http://www.gnu.org/licenses/gpl-3.0.html
+#
+#  CNO website: http://www.cellnopt.org
+#
+##############################################################################
+# $Id$
+
 mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NULL){
   # ====== Extract the results of the simulations ====== #
   # == and make it in the same format as the experimental values are stored == #

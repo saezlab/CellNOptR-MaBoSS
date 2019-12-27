@@ -58,7 +58,7 @@ internal_simulateTN <- function(CNOlist, model, simPrev, bStringPrev, bStringTim
 
 
   # simulate
-  SimT2 <- simulatorTN(
+  SimT2 <- simulatorTN_mbs(
     simResultsPrev=simPrev,
     CNOlist=CNOlist,
     model=modelCut,
@@ -90,7 +90,7 @@ internal_simulateT1<-function(CNOlist, model, bStringT1, simList=NULL, indexList
     newSimList = cutSimList(simList, bStringT1)
 
     # compute the results
-    simRes <- simulatorT1(CNOlist=CNOlist, model=modelCut, simList=newSimList, 
+    simRes <- simulatorT1_mbs(CNOlist=CNOlist, model=modelCut, simList=newSimList, 
         indexList=indexList)
 
     return(simRes)
