@@ -12,7 +12,6 @@
 #  CNO website: http://www.cellnopt.org
 #
 ##############################################################################
-# $Id: checkSignals.R 4106 2013-11-06 15:53:49Z cokelaer $
 checkSignals<-function(CNOlist, model ){
 
     if ((class(CNOlist)=="CNOlist")==FALSE){
@@ -36,7 +35,7 @@ checkSignals<-function(CNOlist, model ){
             ))
     }
 
-    # same for stimuli 
+    # same for stimuli
     signalsMatch<-match(colnames(CNOlist@stimuli),model$namesSpecies,nomatch=0)
     if(any(signalsMatch == 0)){
         stop(paste(
@@ -53,6 +52,18 @@ checkSignals<-function(CNOlist, model ){
             toString(colnames(CNOlist@inhibitors)[which(signalsMatch == 0)])
             ))
     }
+    
+    # check if the stimuli nodes have no incoming edge: will not treated
+    #  in the simulation functions
+  	stimuli <- colnames(CNOlist@stimuli)
+    
+   if(any(model$interMat[stimuli,] == 1)){
+   		isWrongReaction = apply(model$interMat[stimuli,,drop=FALSE] == 1,2,any)
+   		msg = names(isWrongReaction)[isWrongReaction]
+    	stop(paste0("Stimuli node must not have incoming edge. Please check the model for reactions: ", paste(msg,collapse = ", ")))
+    }
+    
+    
+    
 
 }
-

@@ -15,7 +15,7 @@
 # $Id$
 
 cutAndPlot <- function(CNOlist, model, bStrings, plotPDF=FALSE, tag=NULL,
- plotParams=list(maxrow=10), scoreT0=TRUE, initState=TRUE)
+ plotParams=list(maxrow=10))
 {
 
 
@@ -42,9 +42,9 @@ cutAndPlot <- function(CNOlist, model, bStrings, plotPDF=FALSE, tag=NULL,
     if (tPt == 2){
        #print("Entering cutAndPlotResultsT1")
 
-       outputs = cutAndPlotResultsT1_mbs(model=model, bString=bStrings[[1]], simList=simList, 
+       outputs = cutAndPlotResultsT1(model=model, bString=bStrings[[1]], simList=simList, 
             CNOlist=CNOlist, indexList=indexList, plotPDF=plotPDF, tag=tag,
-            plotParams=plotParams, scoreT0=TRUE, initState=TRUE)
+            plotParams=plotParams)
     }
 
     if (tPt>=3){

@@ -14,7 +14,10 @@
 ##############################################################################
 # $Id$
 plotCNOlist2<-function(cnolist, simulated_cnolist=NULL, ymin=0, ymax=1){
-
+    if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 needed for this function to work. Please install it: install.packages('ggplot2')",
+      call. = FALSE)
+  }
     #check that CNOlist is a CNOlist
 
 
@@ -27,18 +30,19 @@ plotCNOlist2<-function(cnolist, simulated_cnolist=NULL, ymin=0, ymax=1){
     }
 
     times=NULL # just to prevent warnings
+    values=NULL # just to prevent warnings
     type=NULL # just to prevent warnings
     # in ggplot, you can remove colour=type to get only black lines
     # remove shape=type to get black-circle symbol
     sp <- ggplot(d, aes(x=times, y=values, group=type, shape=type, colour=type)) +
         geom_point(size=3, fill="white") +
         geom_line(size=1.) +
-        xlab("") + 
+        xlab("") +
         ylab("Conditions")
         #scale_shape_manual(name="data type", values=c(22,21))
         #scale_color_manual(name="data type", values=c("black","red"))
 
-    sp + facet_grid(conditions~species) + theme_bw()+ 
+    sp + facet_grid(conditions~species) + theme_bw()+
         theme(
             strip.text.x=element_text(size=8,angle=0),
             strip.text.y = element_text(size=12, face="bold"),
@@ -95,4 +99,3 @@ plotCNOlist2<-function(cnolist, simulated_cnolist=NULL, ymin=0, ymax=1){
 
     return(d1)
 }
-

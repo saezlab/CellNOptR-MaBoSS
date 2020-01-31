@@ -1,6 +1,26 @@
-import("graph", "RBGL")
+import("graph", "RBGL", "ggplot2")
+import("XML", except="addNode") # conflict with graph::addNode; neither used
+#import("data.table")
+#import("plyr")
+#import("dplyr")
+#import("tidyr")
+#import("readr")
+#import("stringr")
 
 useDynLib(CellNOptR)
+
+importFrom("grDevices", "dev.new", "dev.off", "heat.colors", "pdf",
+           "png", "rgb", "svg")
+importFrom("graphics", "arrows", "axis", "close.screen", "image",
+           "lines", "par", "plot.new", "points", "rect", "screen",
+           "segments", "split.screen", "text","barplot")
+importFrom("methods", "new")
+importFrom("stats", "rnorm", "runif", "var")
+importFrom("utils", "combn", "count.fields", "installed.packages",
+           "read.csv", "read.table", "tail", "write.table")
+importFrom("RCurl", "getURL")
+importFrom("hash", "hash", "has.key")
+importFrom("Rgraphviz", "layoutGraph", "renderGraph", "toDot")
 
 
 
@@ -8,31 +28,32 @@ export(
     "buildBitString",
     "checkSignals",
     "exhaustive",
-    "CNOdata", 
+    "CNOdata",
     "CNORwrap",
     "CNORbool",
     "CNOlist",
     "compressModel",
-    "computeScoreT1_mbs",
+    "computeScoreT1",
     "computeScoreTN",
-    "cSimulator_mbs",
+    "crossInhibitedData",
+    "cSimulator",
     "cutAndPlot",
-    "cutAndPlotResultsT1_mbs",
+    "cutAndPlotResultsT1",
     "cutAndPlotResultsTN",
     "cutCNOlist",
     "cutNONC",
     "cutSimList",
-    "cutModel", 
+    "cutModel",
     "defaultParameters",
     "expandGates",
     "findNONC",
-    "gaBinaryT1_mbs",
+    "gaBinaryT1",
     "gaBinaryT2",
     "gaBinaryTN",
     "graph2sif",
-    "getFit_mbs",
+    "getFit",
     "indexFinder",
-    "mapBack", 
+    "mapBack",
     "makeCNOlist",
     "model2sif",
     "model2igraph",
@@ -54,29 +75,32 @@ export(
     "readMIDAS",
     "readSIF",
     "readSif",
+    "readBND",
+    "readBNET",
     "residualError",
     "sif2graph",
     "simulateT1",
     "simulateTN",
-    "simulatorT0_mbs",
-    "simulatorT1_mbs",
-    "simulatorTN_mbs",
+    "simulatorT0",
+    "simulatorT1",
+    "simulatorTN",
+    "toSBML",
     "writeDot",
     "writeMIDAS",
     "writeSIF",
     "writeNetwork",
     "writeReport",
-    "writeScaffold", 
-    "plotModel")
+    "writeScaffold",
+    "plotModel",
+    "ilpBinaryTN",
+    "ilpBinaryT2",
+    "ilpBinaryT1",
+    "crossvalidateBoolean")
 
 # CNOlist class
 exportClasses(CNOlist)
 
 # CNOlist class methods:
-exportMethods("plot", "randomize", "length", "compatCNOlist")
+exportMethods("plot", "randomize", "length", "compatCNOlist",  "readErrors", "writeErrors")
 exportMethods("getCues", "getSignals", "getStimuli", "getInhibitors", "getVariances", "getTimepoints")
 exportMethods("setSignals<-")
-
-
-
-
