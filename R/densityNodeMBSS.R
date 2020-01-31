@@ -14,7 +14,7 @@
 ##############################################################################
 # $Id$
 
-densityNodesMBSS <- function(dataMB, nameFolder, timeMaxi, species, qtty, origines) {
+densityNodesMBSS <- function(dataMB, nameFolder, timeMaxi, species, qtty, origines, slopeValues) {
   myPath <- getwd()
   timeSeq <- dataMB[,which(colnames(dataMB) == "Time")]
   pdf(paste(myPath,"/allCond/",nameFolder, "_", timeMaxi,".pdf", sep=""))

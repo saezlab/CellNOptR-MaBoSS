@@ -74,7 +74,7 @@ testOnSteadyState <- function(treatmt, nameSimIndiv, CNOlist, model, timeMaxi) {
 
   }
   
-  densityNodesMBSS(dataMB, nameFolder, timeMaxi, species, qtty, origines)
+  densityNodesMBSS(dataMB, nameFolder, timeMaxi, species, qtty, origines, slopeValues)
 
   ##Test iteratively the slope and the RSE of each node
   ##obtained by the linear regression
