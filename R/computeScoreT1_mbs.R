@@ -110,7 +110,10 @@ computeScoreT1_mbs<-function(CNOlist, model, mbsPath, bString, simList=NULL, ind
   nDataP <- sum(!is.na(CNOlist@signals[[timeIndex]]))
   Score <- Score/nDataP
   
+  system("rmdir allCond")
+  
   setwd(tmpPath)
   
   return(Score)
+  
 }
