@@ -1,11 +1,5 @@
-import("graph", "RBGL", "ggplot2")
+import("graph", "RBGL", "ggplot2", "stringr")
 import("XML", except="addNode") # conflict with graph::addNode; neither used
-#import("data.table")
-#import("plyr")
-#import("dplyr")
-#import("tidyr")
-#import("readr")
-#import("stringr")
 
 useDynLib(CellNOptR)
 
@@ -95,7 +89,8 @@ export(
     "ilpBinaryTN",
     "ilpBinaryT2",
     "ilpBinaryT1",
-    "crossvalidateBoolean")
+    "crossvalidateBoolean",
+    "computeMaBoSS")
 
 # CNOlist class
 exportClasses(CNOlist)
