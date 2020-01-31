@@ -92,10 +92,10 @@ mbssResults <- function(CNOlist, model, nameSim=NULL, multiTP=NULL, timeMaxi=NUL
   mbssMatrix <- list()
   for (aTP in timePoints) {
     tp <- as.character(aTP)
-  	mbssMatrix[[tp]] <- matrix(data = seq(1:(length(colnames(CNOlistToy@signals$`0`))*nCues))+1,
+  	mbssMatrix[[tp]] <- matrix(data = seq(1:(length(colnames(CNOlist@signals$`0`))*nCues))+1,
                           nrow = nCues,
-                          ncol = length(colnames(CNOlistToy@signals$`0`)),
-                          dimnames = list(names(mbssSim),colnames(CNOlistToy@signals$`0`))
+                          ncol = length(colnames(CNOlist@signals$`0`)),
+                          dimnames = list(names(mbssSim),colnames(CNOlist@signals$`0`))
     )
   }
   
