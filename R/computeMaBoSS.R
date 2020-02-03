@@ -29,7 +29,7 @@ computeMaBoSS<-function(
   selPress=1.2,
   elitism=5,
   relTol=0.1,
-  verbose=TRUE,
+  verbose=FALSE,
   priorBitString=NULL,
   timeIndex=2,
   scoreT0=TRUE,
