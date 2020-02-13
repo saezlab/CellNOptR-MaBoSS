@@ -1,32 +1,47 @@
-# CellNOptR-MaBoSS
-CellNOptR with MaBoSS simulations. Rather than using a synchronous apdate, originally implemented in CellNOptR, it calls MaBoSS to do the simulations with asynchronous updates. By this way, the simulated data can have values from 0 to 1 instead of 0 or 1.
+# CellNOptR-MaBoSS Example
+Here we show an application of CellNOptR-MaBoSS over the ToyMMB case study. More details about this case-study can be found [here](https://saezlab.github.io/CellNOptR/5_Models%20and%20Documentation/).
 
-## Tools installation
+## Loading the package and the data
 
-* To download MaBoSS, go to this [webpage](https://maboss.curie.fr) and follow the instructions given for the installation.
-* Download the CellNOptR-MaBoSS folder on your local machine. The package is contained in the `pipelineCNOR-MBSS` directory.
+After installation of [CellNoptR-MaBoSS](https://github.com/saezlab/CellNOptR-MaBoSS/blob/package_development/Readme.md) package, users can load the `CellNOptR` package and the toy case study after reading the network from the *SIF* and the data from the *MIDAS* file:
 
-## Make the pipeline running on the model
+```R
+library(CellNOptR)
 
-* Compress and install the package as a library :  
-`tar zcvf pipelineCNOR-MBSS.tar.gz pipelineCNOR-MBSS/`  
-`R CMD INSTALL --no-html pipelineCNOR-MBSS.tar.gz`
-* Go the MaBoSS directory, and copy the `ToyDataMMB.csv`, `ToyPKNMMB.sif` et `basicFile.cfg` from the CellNOptR-MaBoSS directory.
-* Run the pipeline with the command line :  
-`nohup Rscript ~/CellNOptR-MaBoSS/runPipeline.R &`
+CNOlistToy=CNOlist("ToyDataMMB.csv");
+model=readSIF("ToyPKNMMB.sif");
+```
 
-## Change the model
+## Preprocessing and setting useful parameters
 
-* A `.csv` and a `.sif` files are required. The first file contains the experiemental data and the second one gives the regulatory edges
-of the model. For more informations : *Terfve, Camille, et al. "CellNOptR: a flexible toolkit to train protein signaling networks to data using multiple logic formalisms." BMC systems biology 6.1 (2012): 133.*
-* Replace files' names in the `runPipeline.R` lines 41 and 49 respectively. If the files are not in the MaBoSS directory, enter
-the absolute path of the files.
+Our network can be compressed and we can also set other parameters useful for the CellNOptR analysis as described below:
 
-## The outputs
+```R
+model <- preprocessing(CNOlistToy, model, expansion=FALSE, compression=TRUE, 
+                       cutNONC=TRUE, verbose=FALSE) ##compressing the network
+                       
+multiTP <- FALSE  ##case-study without multiple time-points, otherwise it should be set multiTP <- TRUE
+initBstring<-rep(1,length(model$reacID)) ##setting the initial bit-string to evaluate
+mbsPath = "~/Downloads/MaBoSS-env-2.0/" ##setting the download path of MaBoSS
+```
 
-* A file called `nohup.out` had store  all the printings that can occure during the execution.
-* For each generation, a file `resultsGen_1` (e.g. for the first generation) is created. It is the consequence of the line 89 in the `runPipeline.R`, where the parameter `verbose` is TRUE.
-* `Rplots.pdf` and `SimResultsT1_1.pdf` represent the fitting scores between the best solution found and the experimental data
-* `bestTopology_PKN.pdf` gives first the topology obtained for the best solution
-* `evolFitToyT1.pdf` represents the average score through generation and the best score along the time
+## Running CellNOptR-MaBoSS
 
+Now we perfor the CellNoptR-MaBoSS analysis through the *computeMaBoSS* function:
+
+```R
+ToyT1opt<-computeMaBoSS(CNOlist=CNOlistToy, model=model, mbsPath, initBstring=initBstring, popSize=10, maxGens=10,elitism=5,
+                           verbose=FALSE, scoreT0=TRUE, initState=TRUE, multiTP=multiTP, ttime=startRun)
+```
+
+## Obtaining results
+
+Finally we show the results and plot the optimal model
+
+```R
+print(ToyT1opt)
+
+pdf("bestTopology_PKN.pdf")
+plotModel(model, CNOlistToy, bString=ToyT1opt$bString, graphvizParams = list(fontsize=46, nodeWidth=3))
+dev.off()
+```
