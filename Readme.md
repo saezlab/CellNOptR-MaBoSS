@@ -25,6 +25,11 @@ if(!require("devtools")) install.packages("devtools")   # installs devtools pack
 devtools::install_github("saezlab/CellNOptR-MaBoSS")
 ```
 
+Finally we can call the package:
+```
+library(CellNOptR)
+```
+
 ### Example
 An example about how to run CellNOptR-MaBoSS is provided [here](https://github.com/saezlab/CellNOptR-MaBoSS/tree/toy_example).
 
