@@ -1,8 +1,8 @@
-CellNOptR
+CNO-MaBoSS
 =========
 [![Build Status](https://travis-ci.org/saezlab/CellNOptR.svg?branch=master)](https://travis-ci.org/saezlab/CellNOptR)
 
-Training of boolean logic models of signalling networks using prior knowledge networks and perturbation data.
+Training of boolean logic models of signalling networks using prior knowledge networks and perturbation data with a stochastic simulator.
 
 - Please visit [CellNOptR](https://saezlab.github.io/CellNOptR/) for details about the project (references, news, ...)
 
@@ -24,7 +24,7 @@ BiocManager::install("RBGL")
 Using the `devtools` package you can install the latest version from the GitHub repository:
 ```
 if(!require("devtools")) install.packages("devtools")   # installs devtools package if not already installed
-devtools::install_github("saezlab/CellNOptR", ref="ilp", build_vignettes = TRUE)
+devtools::install_github("saezlab/CellNOptR-MaBoSS")
 ```
 To see the documentation of the package and a few examples, please type:
 ```
