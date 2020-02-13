@@ -1,32 +1,34 @@
-# CellNOptR-MaBoSS
-CellNOptR with MaBoSS simulations. Rather than using a synchronous apdate, originally implemented in CellNOptR, it calls MaBoSS to do the simulations with asynchronous updates. By this way, the simulated data can have values from 0 to 1 instead of 0 or 1.
+CellNOptR-MaBoSS
+=========
+[![Build Status](https://travis-ci.org/saezlab/CellNOptR.svg?branch=master)](https://travis-ci.org/saezlab/CellNOptR)
 
-## Tools installation
+Training of boolean logic models of signalling networks using prior knowledge networks and perturbation data with a stochastic simulator.
 
-* To download MaBoSS, go to this [webpage](https://maboss.curie.fr) and follow the instructions given for the installation.
-* Download the CellNOptR-MaBoSS folder on your local machine. The package is contained in the `pipelineCNOR-MBSS` directory.
+- Please visit [CellNOptR](https://saezlab.github.io/CellNOptR/) for details about the project (references, news, ...)
 
-## Make the pipeline running on the model
 
-* Compress and install the package as a library :  
-`tar zcvf pipelineCNOR-MBSS.tar.gz pipelineCNOR-MBSS/`  
-`R CMD INSTALL --no-html pipelineCNOR-MBSS.tar.gz`
-* Go the MaBoSS directory, and copy the `ToyDataMMB.csv`, `ToyPKNMMB.sif` et `basicFile.cfg` from the CellNOptR-MaBoSS directory.
-* Run the pipeline with the command line :  
-`nohup Rscript ~/CellNOptR-MaBoSS/runPipeline.R &`
+## Installation:
 
-## Change the model
+Here CellNOptR-MaBoSS has been implemented within the CellNOptR package. Before starting, make sure you have installed the latest version of R. For more information and download of R, please refer to [R project page](http://www.r-project.org/) . For more information about how to  install R packages, please refer to [Installing packages](http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages).
+These packages rely on several Bioconductor package (e.g., RBGL, graph, methods, etc.). As an example, you can
+install RGBL package by typing:
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("RBGL")
+```
 
-* A `.csv` and a `.sif` files are required. The first file contains the experiemental data and the second one gives the regulatory edges
-of the model. For more informations : *Terfve, Camille, et al. "CellNOptR: a flexible toolkit to train protein signaling networks to data using multiple logic formalisms." BMC systems biology 6.1 (2012): 133.*
-* Replace files' names in the `runPipeline.R` lines 41 and 49 respectively. If the files are not in the MaBoSS directory, enter
-the absolute path of the files.
+### Installation from GitHub
+Using the `devtools` package you can install the latest version from the GitHub repository:
+```
+if(!require("devtools")) install.packages("devtools")   # installs devtools package if not already installed
+devtools::install_github("saezlab/CellNOptR-MaBoSS")
+```
 
-## The outputs
+### Example
+An example about how to run CellNOptR-MaBoSS is provided [here](https://github.com/saezlab/CellNOptR-MaBoSS/tree/toy_example).
 
-* A file called `nohup.out` had store  all the printings that can occure during the execution.
-* For each generation, a file `resultsGen_1` (e.g. for the first generation) is created. It is the consequence of the line 89 in the `runPipeline.R`, where the parameter `verbose` is TRUE.
-* `Rplots.pdf` and `SimResultsT1_1.pdf` represent the fitting scores between the best solution found and the experimental data
-* `bestTopology_PKN.pdf` gives first the topology obtained for the best solution
-* `evolFitToyT1.pdf` represents the average score through generation and the best score along the time
-
+## Feedbacks, bug reports, features
+Feedbacks and bugreports are always very welcomed!  
+Please use the Github issue page to report bugs or for questions: https://github.com/saezlab/CellNOptR/issues.
+Many thanks!
